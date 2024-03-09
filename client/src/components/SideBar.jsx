@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useTheme } from "@emotion/react";
 import { Avatar, Box, Divider, Typography } from "@mui/material";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
@@ -9,12 +10,11 @@ import logo from "../assets/images/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { setToggled } from "../state/global/GlobalSlice";
 
-const SideBar = () => {
+const SideBar = ({ user }) => {
   const collapsed = useSelector((state) => state.global.collapsed);
   const toggled = useSelector((state) => state.global.toggled);
   const dispatch = useDispatch();
   const theme = useTheme();
-  console.log(toggled);
   return (
     <Sidebar
       collapsed={collapsed}
@@ -202,7 +202,7 @@ const SideBar = () => {
                   height: collapsed ? "30px" : "40px",
                   width: collapsed ? "30px" : "40px",
                 }}
-                alt="Remy Sharp"
+                alt={user.name}
                 src={profileImage}
               />
 
@@ -213,13 +213,13 @@ const SideBar = () => {
                     fontSize="0.9rem"
                     sx={{ color: theme.palette.secondary[100] }}
                   >
-                    Remy Sharp
+                    {user.name}
                   </Typography>
                   <Typography
                     fontSize="0.8rem"
                     sx={{ color: theme.palette.secondary[200] }}
                   >
-                    Pharmacist
+                    {user.occupation}
                   </Typography>
                 </Box>
               )}

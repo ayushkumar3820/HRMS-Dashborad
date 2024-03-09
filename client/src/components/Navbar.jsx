@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   ArrowDropDownOutlined,
   DarkModeOutlined,
@@ -15,11 +16,15 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { Menu, MenuItem } from "@szhsin/react-menu";
+import "@szhsin/react-menu/dist/index.css";
+import "@szhsin/react-menu/dist/transitions/slide.css";
+
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setCollapsed, setToggled } from "../state/global/GlobalSlice";
 import profileImage from "../assets/images/profile.jpg";
 
-const Navbar = () => {
+const Navbar = ({ user }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const collapsed = useSelector((state) => state.global.collapsed);
@@ -74,40 +79,51 @@ const Navbar = () => {
         <IconButton>
           <SettingsOutlined sx={{ fontSize: "25px" }} />
         </IconButton>
-        <Button
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            textTransform: "capitalize",
-            gap: "10px",
+        <Menu
+          menuStyle={{
+            background: theme.palette.background.alt,
+            color: theme.palette.secondary[100],
           }}
+          menuButton={
+            <Button
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                textTransform: "capitalize",
+                gap: "10px",
+              }}
+            >
+              <Avatar
+                sx={{ height: "32px", width: "32px" }}
+                alt={user.name}
+                src={profileImage}
+              />
+              {!xsDevice && (
+                <Box textAlign="left">
+                  <Typography
+                    fontWeight="bold"
+                    fontSize="0.85rem"
+                    sx={{ color: theme.palette.secondary[100] }}
+                  >
+                    {user.name}
+                  </Typography>
+                  <Typography
+                    fontSize="0.75rem"
+                    sx={{ color: theme.palette.secondary[200] }}
+                  >
+                    {user.occupation}
+                  </Typography>
+                </Box>
+              )}
+              <ArrowDropDownOutlined
+                sx={{ color: theme.palette.secondary[300], fontSize: "25px" }}
+              />
+            </Button>
+          }
+          transition
         >
-          <Avatar
-            sx={{ height: "32px", width: "32px" }}
-            alt="Remy Sharp"
-            src={profileImage}
-          />
-          {!xsDevice && (
-            <Box textAlign="left">
-              <Typography
-                fontWeight="bold"
-                fontSize="0.85rem"
-                sx={{ color: theme.palette.secondary[100] }}
-              >
-                Remy Sharp
-              </Typography>
-              <Typography
-                fontSize="0.75rem"
-                sx={{ color: theme.palette.secondary[200] }}
-              >
-                Pharmacist
-              </Typography>
-            </Box>
-          )}
-          <ArrowDropDownOutlined
-            sx={{ color: theme.palette.secondary[300], fontSize: "25px" }}
-          />
-        </Button>
+          <MenuItem>Log Out</MenuItem>
+        </Menu>
       </Box>
     </Box>
   );
