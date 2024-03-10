@@ -2542,7 +2542,7 @@ export const dataProduct = [
 export const dataProductStat = [
   {
     _id: "6371259df03239e680000035",
-    productId: "63701d24f03239c72c00018e",
+    product: "63701d24f03239c72c00018e",
     yearlySalesTotal: 7152,
     yearlyTotalSoldUnits: 1414,
     monthlyData: [
@@ -2884,7 +2884,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259ef032398675000198",
-    productId: "63701d24f03239c72c00018f",
+    product: "63701d24f03239c72c00018f",
     yearlySalesTotal: 2192,
     yearlyTotalSoldUnits: 1169,
     monthlyData: [
@@ -3226,7 +3226,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df03239b7f7000083",
-    productId: "63701d24f03239c72c000190",
+    product: "63701d24f03239c72c000190",
     yearlySalesTotal: 4356,
     yearlyTotalSoldUnits: 4305,
     monthlyData: [
@@ -3568,7 +3568,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df03239444100035a",
-    productId: "63701d24f03239c72c000191",
+    product: "63701d24f03239c72c000191",
     yearlySalesTotal: 9976,
     yearlyTotalSoldUnits: 3579,
     monthlyData: [
@@ -3910,7 +3910,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df03239d81e000083",
-    productId: "63701d24f03239867500012a",
+    product: "63701d24f03239867500012a",
     yearlySalesTotal: 3602,
     yearlyTotalSoldUnits: 1491,
     monthlyData: [
@@ -4252,7 +4252,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df03239eb0c000002",
-    productId: "63701d24f03239867500012b",
+    product: "63701d24f03239867500012b",
     yearlySalesTotal: 4819,
     yearlyTotalSoldUnits: 4228,
     monthlyData: [
@@ -4594,7 +4594,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df032395b33000198",
-    productId: "63701d24f03239867500012c",
+    product: "63701d24f03239867500012c",
     yearlySalesTotal: 4091,
     yearlyTotalSoldUnits: 4832,
     monthlyData: [
@@ -4936,7 +4936,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df03239d591000395",
-    productId: "63701d24f03239867500012d",
+    product: "63701d24f03239867500012d",
     yearlySalesTotal: 6435,
     yearlyTotalSoldUnits: 4627,
     monthlyData: [
@@ -5278,7 +5278,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df032395694000083",
-    productId: "63701d24f03239b7f7000015",
+    product: "63701d24f03239b7f7000015",
     yearlySalesTotal: 3309,
     yearlyTotalSoldUnits: 2331,
     monthlyData: [
@@ -5620,7 +5620,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df032396b8e000083",
-    productId: "63701d24f03239b7f7000016",
+    product: "63701d24f03239b7f7000016",
     yearlySalesTotal: 5264,
     yearlyTotalSoldUnits: 1782,
     monthlyData: [
@@ -5962,7 +5962,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df03239bef0000198",
-    productId: "63701d24f03239b7f7000017",
+    product: "63701d24f03239b7f7000017",
     yearlySalesTotal: 3238,
     yearlyTotalSoldUnits: 2564,
     monthlyData: [
@@ -6304,7 +6304,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df03239f793000002",
-    productId: "63701d24f03239b7f7000018",
+    product: "63701d24f03239b7f7000018",
     yearlySalesTotal: 7954,
     yearlyTotalSoldUnits: 4999,
     monthlyData: [
@@ -6646,7 +6646,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df03239528f000083",
-    productId: "63701d24f0323944410002ec",
+    product: "63701d24f0323944410002ec",
     yearlySalesTotal: 5826,
     yearlyTotalSoldUnits: 3386,
     monthlyData: [
@@ -6988,7 +6988,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259ef03239f09e0001fc",
-    productId: "63701d24f0323944410002ed",
+    product: "63701d24f0323944410002ed",
     yearlySalesTotal: 2947,
     yearlyTotalSoldUnits: 1203,
     monthlyData: [
@@ -7330,7 +7330,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df03239db69000198",
-    productId: "63701d24f0323944410002ee",
+    product: "63701d24f0323944410002ee",
     yearlySalesTotal: 2128,
     yearlyTotalSoldUnits: 703,
     monthlyData: [
@@ -7672,7 +7672,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df03239b913000083",
-    productId: "63701d24f0323944410002ef",
+    product: "63701d24f0323944410002ef",
     yearlySalesTotal: 7841,
     yearlyTotalSoldUnits: 3889,
     monthlyData: [
@@ -8014,7 +8014,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df03239cdc5000083",
-    productId: "63701d24f03239d81e000015",
+    product: "63701d24f03239d81e000015",
     yearlySalesTotal: 5994,
     yearlyTotalSoldUnits: 2338,
     monthlyData: [
@@ -8356,7 +8356,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df032399c00000198",
-    productId: "63701d24f03239d81e000016",
+    product: "63701d24f03239d81e000016",
     yearlySalesTotal: 5650,
     yearlyTotalSoldUnits: 2225,
     monthlyData: [
@@ -8698,7 +8698,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df0323986f3000198",
-    productId: "63701d24f03239d81e000017",
+    product: "63701d24f03239d81e000017",
     yearlySalesTotal: 1016,
     yearlyTotalSoldUnits: 2672,
     monthlyData: [
@@ -9040,7 +9040,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df03239d40b0000d3",
-    productId: "63701d24f03239d81e000018",
+    product: "63701d24f03239d81e000018",
     yearlySalesTotal: 7368,
     yearlyTotalSoldUnits: 1734,
     monthlyData: [
@@ -9382,7 +9382,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259df03239d40b0000d4",
-    productId: "63701d24f032390a34000327",
+    product: "63701d24f032390a34000327",
     yearlySalesTotal: 7667,
     yearlyTotalSoldUnits: 2377,
     monthlyData: [
@@ -9724,7 +9724,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259ef03239d40b0000d5",
-    productId: "63701d24f032390a34000328",
+    product: "63701d24f032390a34000328",
     yearlySalesTotal: 6058,
     yearlyTotalSoldUnits: 4381,
     monthlyData: [
@@ -10066,7 +10066,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259ef03239d40b0000d6",
-    productId: "63701d24f032390a34000329",
+    product: "63701d24f032390a34000329",
     yearlySalesTotal: 6371,
     yearlyTotalSoldUnits: 68,
     monthlyData: [
@@ -10408,7 +10408,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259ef03239d40b0000d7",
-    productId: "63701d24f032390a3400032a",
+    product: "63701d24f032390a3400032a",
     yearlySalesTotal: 6612,
     yearlyTotalSoldUnits: 2642,
     monthlyData: [
@@ -10750,7 +10750,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259ef03239d40b0000d8",
-    productId: "63701d24f032395b3300012a",
+    product: "63701d24f032395b3300012a",
     yearlySalesTotal: 2803,
     yearlyTotalSoldUnits: 2247,
     monthlyData: [
@@ -11092,7 +11092,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259ff03239d40b0000d9",
-    productId: "63701d24f032395b3300012b",
+    product: "63701d24f032395b3300012b",
     yearlySalesTotal: 9751,
     yearlyTotalSoldUnits: 1501,
     monthlyData: [
@@ -11434,7 +11434,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259ff03239d40b0000da",
-    productId: "63701d24f032395b3300012c",
+    product: "63701d24f032395b3300012c",
     yearlySalesTotal: 1810,
     yearlyTotalSoldUnits: 4730,
     monthlyData: [
@@ -11776,7 +11776,7 @@ export const dataProductStat = [
   },
   {
     _id: "6371259ff03239d40b0000db",
-    productId: "63701d24f032395b3300012d",
+    product: "63701d24f032395b3300012d",
     yearlySalesTotal: 5256,
     yearlyTotalSoldUnits: 4776,
     monthlyData: [
@@ -12118,7 +12118,7 @@ export const dataProductStat = [
   },
   {
     _id: "637125a0f03239d40b0000dc",
-    productId: "63701d25f03239d591000327",
+    product: "63701d25f03239d591000327",
     yearlySalesTotal: 2421,
     yearlyTotalSoldUnits: 4366,
     monthlyData: [
@@ -12460,7 +12460,7 @@ export const dataProductStat = [
   },
   {
     _id: "637125a0f03239d40b0000dd",
-    productId: "63701d25f03239d591000328",
+    product: "63701d25f03239d591000328",
     yearlySalesTotal: 9959,
     yearlyTotalSoldUnits: 2071,
     monthlyData: [
