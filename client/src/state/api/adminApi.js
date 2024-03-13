@@ -31,6 +31,12 @@ export const adminApi = createApi({
       }),
       providesTags: ["Transactions"],
     }),
+
+    // Get Geography Data
+    getGeography: builder.query({
+      query: () => "client/geography",
+      providesTags: ["Geography"],
+    }),
   }),
 });
 
@@ -39,4 +45,5 @@ export const {
   useGetProductsQuery,
   useGetCustomersQuery,
   useGetTransactionsQuery,
+  useGetGeographyQuery,
 } = adminApi;

@@ -1,6 +1,12 @@
 /* eslint-disable react/prop-types */
 import { Search } from "@mui/icons-material";
-import { IconButton, TextField, InputAdornment, Box } from "@mui/material";
+import {
+  IconButton,
+  TextField,
+  InputAdornment,
+  Box,
+  useMediaQuery,
+} from "@mui/material";
 import {
   GridToolbarDensitySelector,
   GridToolbarContainer,
@@ -9,6 +15,8 @@ import {
 } from "@mui/x-data-grid";
 
 const DataGridCustomToolbar = ({ search, setSearch }) => {
+  const isSmDevice = useMediaQuery("(max-width: 576px");
+  const isXsDevice = useMediaQuery("(max-width: 494px");
   return (
     <GridToolbarContainer>
       <Box
@@ -18,13 +26,13 @@ const DataGridCustomToolbar = ({ search, setSearch }) => {
         width="100%"
       >
         <Box display="flex" alignItems="center" justifyContent="space-between">
-          <GridToolbarColumnsButton />
-          <GridToolbarDensitySelector />
+          {!isXsDevice && <GridToolbarColumnsButton />}
+          {!isSmDevice && <GridToolbarDensitySelector />}
           <GridToolbarExport />
         </Box>
         <TextField
           label="Search..."
-          sx={{ mb: "0.5rem", width: "15rem" }}
+          sx={{ mb: "0.5rem", width: isXsDevice ? "10rem" : "15rem" }}
           onChange={(e) => setSearch(e.target.value)}
           value={search}
           variant="standard"
