@@ -22,7 +22,7 @@ import "@szhsin/react-menu/dist/transitions/slide.css";
 
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setCollapsed, setToggled } from "../state/global/GlobalSlice";
-import profileImage from "../assets/images/profile.jpg";
+import profileImage from "../assets/images/profile.jpeg";
 
 const Navbar = ({ user }) => {
   const dispatch = useDispatch();

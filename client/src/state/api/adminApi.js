@@ -37,6 +37,46 @@ export const adminApi = createApi({
       query: () => "client/geography",
       providesTags: ["Geography"],
     }),
+
+    // Get Sales Data
+    getSales: builder.query({
+      query: () => "sales/sales",
+      providesTags: ["Sales"],
+    }),
+
+    // Get Daily Sales Data
+    getDailySales: builder.query({
+      query: ({ startDate, endDate }) => ({
+        url: "sales/sales/daily",
+        method: "GET",
+        params: { startDate, endDate },
+      }),
+      providesTags: ["dailySales"],
+    }),
+
+    // Get Monthly Sales Data
+    getMonthlySales: builder.query({
+      query: () => "sales/sales/monthly",
+      providesTags: ["monthlySales"],
+    }),
+
+    // Get List of Admins
+    getAdmins: builder.query({
+      query: () => "management/admins",
+      providesTags: ["Admins"],
+    }),
+
+    // Get List of Affiliate Sales
+    getUserPerformance: builder.query({
+      query: (id) => `management/performance/${id}`,
+      providesTags: ["Performance"],
+    }),
+
+    // Get Dashboard Data
+    getDashboard: builder.query({
+      query: () => "general/dashboard",
+      providesTags: ["Dashboard"],
+    }),
   }),
 });
 
@@ -46,4 +86,10 @@ export const {
   useGetCustomersQuery,
   useGetTransactionsQuery,
   useGetGeographyQuery,
+  useGetSalesQuery,
+  useGetDailySalesQuery,
+  useGetMonthlySalesQuery,
+  useGetAdminsQuery,
+  useGetUserPerformanceQuery,
+  useGetDashboardQuery,
 } = adminApi;

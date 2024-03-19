@@ -11,18 +11,22 @@ import morgan from "morgan";
 import clientRoutes from "./routes/client.js";
 import generalRoutes from "./routes/general.js";
 import managementRoutes from "./routes/management.js";
-import salesRoutes from "./routes/client.js";
+import salesRoutes from "./routes/sales.js";
 
 import {
   dataUser,
   dataProduct,
   dataProductStat,
   dataTransaction,
+  dataOverallStat,
+  dataAffiliateStat,
 } from "./data/index.js";
 import User from "./models/User.js";
 import Product from "./models/Product.js";
 import ProductStat from "./models/ProductStat.js";
 import Transaction from "./models/Transaction.js";
+import OverallStat from "./models/OverallStat.js";
+import AffiliateStat from "./models/AffiliateStat.js";
 
 // ---- Configuration ---- //
 dotenv.config();
@@ -60,5 +64,11 @@ mongoose
 
     // insert auto transaction data in dbs
     // Transaction.insertMany(dataTransaction);
+
+    // insert auto overallStat data in dbs
+    //OverallStat.insertMany(dataOverallStat);
+
+    // insert auto AffiliateStat data in dbs
+    //AffiliateStat.insertMany(dataAffiliateStat);
   })
   .catch((error) => console.log(`${error} did not connect`));

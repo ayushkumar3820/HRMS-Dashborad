@@ -5,7 +5,7 @@ import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import { SideItem } from "../components";
 import { DashboardOutlined, SettingsOutlined } from "@mui/icons-material";
 import { sideItems } from "../constants/index";
-import profileImage from "../assets/images/profile.jpg";
+import profileImage from "../assets/images/profile.jpeg";
 import logo from "../assets/images/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { setToggled } from "../state/global/GlobalSlice";
