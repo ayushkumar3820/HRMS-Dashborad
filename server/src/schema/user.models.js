@@ -21,20 +21,10 @@ const userSchema = new mongoose.Schema({
         minlength: 6,
         select: false
     },
-    confirm_password: {
-        type: String,
-        required: [true, 'Confirm password is required'],
-        validate: {
-            validator: function(value) {
-                return value === this.password;
-            },
-            message: 'Passwords do not match'
-        }
-    },
     role: {
         type: String,
-        enum: ['hr', 'admin'],
-        default: 'hr'
+        enum: ['user', 'admin'],
+        default: 'user'
     },
     createdAt: {
         type: Date,
@@ -51,7 +41,6 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next();
     this.password = await bcrypt.hash(this.password, 10);
-    this.confirm_password = undefined; // Remove confirm_password before saving
 });
 
 // Compare password method
