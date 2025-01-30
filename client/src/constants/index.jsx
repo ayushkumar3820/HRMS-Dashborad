@@ -14,58 +14,35 @@ import {
 export const sideItems = {
   client: [
     {
-      title: "Products",
+      title: "Candidate",
       icon: <ShoppingCartOutlined />,
-      path: "/products",
-    },
-    {
-      title: "Customers",
-      icon: <Groups2Outlined />,
-      path: "/customers",
-    },
-    {
-      title: "Transactions",
-      icon: <ReceiptLongOutlined />,
-      path: "/transactions",
-    },
-    {
-      title: "Geography",
-      icon: <PublicOutlined />,
-      path: "/geography",
+      path: "/dashboard",
     },
   ],
   sales: [
     {
-      title: "Overview",
+      title: "Employee",
       icon: <PointOfSaleOutlined />,
       path: "/overview",
     },
     {
-      title: "Daily",
+      title: "Attendance",
       icon: <TodayOutlined />,
-      path: "/daily",
+      path: "/AttendanceDashboard",
     },
     {
-      title: "Monthly",
+      title: "Leave",
       icon: <CalendarMonthOutlined />,
-      path: "/monthly",
+      path: "/LeaveSection",
     },
-    {
-      title: "Breakdown",
-      icon: <PieChartOutlined />,
-      path: "/breakdown",
-    },
+    
   ],
   management: [
     {
-      title: "Admin",
+      title: "Logout",
       icon: <AdminPanelSettingsOutlined />,
-      path: "/admin",
+      path: "/Logout",
     },
-    {
-      title: "Performance",
-      icon: <TrendingUpOutlined />,
-      path: "/performance",
-    },
+   
   ],
 };

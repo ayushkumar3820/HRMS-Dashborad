@@ -1,0 +1,108 @@
+.leave-section {
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 200px;
+    background-color: #f4f4f4;
+    padding: 20px;
+  }
+  
+  .logo {
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .menu ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .menu li {
+    padding: 10px 0;
+    cursor: pointer;
+  }
+  
+  .menu .active {
+    font-weight: bold;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .leave-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header-buttons {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-input {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .add-leave-button {
+    padding: 10px 20px;
+    background-color: #6a0dad;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .leave-content {
+    margin-top: 20px;
+    display: flex;
+  }
+  
+  .applied-leaves, .leave-calendar {
+    flex: 1;
+    margin-right: 20px;
+  }
+  
+  .applied-leaves table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .applied-leaves th, .applied-leaves td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+  }
+  
+  .applied-leaves th {
+    background-color: #6a0dad;
+    color: white;
+  }
+  
+  .applied-leaves button {
+    padding: 5px 10px;
+    background-color: #6a0dad;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .leave-calendar .calendar {
+    /* Calendar component can be styled here */
+  }
+  

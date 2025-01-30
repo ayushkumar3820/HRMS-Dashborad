@@ -1,5 +1,5 @@
 import { Box, useTheme } from "@mui/material";
-import { GeographyChart, Header } from "../../components";
+import { CandidateTable, Header } from "../../components";
 const Geography = () => {
   const theme = useTheme();
   return (
@@ -11,7 +11,7 @@ const Geography = () => {
         border={`1px solid ${theme.palette.secondary[200]}`}
         borderRadius="4px"
       >
-        <GeographyChart />
+        <CandidateTable />
       </Box>
     </Box>
   );

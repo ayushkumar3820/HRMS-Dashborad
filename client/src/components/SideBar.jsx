@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useTheme } from "@emotion/react";
-import { Avatar, Box, Divider, Typography } from "@mui/material";
+import { Avatar, Box, Divider, Typography, TextField } from "@mui/material";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import { SideItem } from "../components";
-import { DashboardOutlined, SettingsOutlined } from "@mui/icons-material";
+import { DashboardOutlined, SettingsOutlined, Search as SearchIcon } from "@mui/icons-material";
 import { sideItems } from "../constants/index";
 import profileImage from "../assets/images/profile.jpeg";
 import logo from "../assets/images/logo.png";
@@ -15,6 +15,7 @@ const SideBar = ({ user }) => {
   const toggled = useSelector((state) => state.global.toggled);
   const dispatch = useDispatch();
   const theme = useTheme();
+
   return (
     <Sidebar
       collapsed={collapsed}
@@ -68,7 +69,7 @@ const SideBar = ({ user }) => {
                 <img
                   style={{ width: "30px", height: "30px", borderRadius: "8px" }}
                   src={logo}
-                  alt="Golden"
+                  alt="Logo"
                 />
                 {!collapsed && (
                   <Typography
@@ -76,12 +77,50 @@ const SideBar = ({ user }) => {
                     fontWeight="bold"
                     textTransform="capitalize"
                   >
-                    Golden
+                    Logo
                   </Typography>
                 )}
               </Box>
             </MenuItem>
           </Menu>
+
+          {/* Search Bar */}
+          {!collapsed && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                padding: "0 1rem",
+                marginBottom: "1rem",
+              }}
+            >
+              <SearchIcon sx={{ color: theme.palette.secondary[300] }} />
+              <TextField
+                placeholder="Search"
+                variant="outlined"
+                size="small"
+                sx={{
+                  flex: 1,
+                  marginLeft: "0.5rem",
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: theme.palette.secondary[300],
+                    },
+                    "&:hover fieldset": {
+                      borderColor: theme.palette.primary[600],
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: theme.palette.primary[600],
+                    },
+                  },
+                  "& .MuiInputBase-input": {
+                    color: theme.palette.secondary[200],
+                  },
+                }}
+              />
+            </Box>
+          )}
+
           <Menu
             menuItemStyles={{
               button: {
@@ -93,16 +132,12 @@ const SideBar = ({ user }) => {
               },
             }}
           >
-            <SideItem
-              title="Dashboard"
-              path="/dashboard"
-              icon={<DashboardOutlined />}
-            />
+            
           </Menu>
 
           {/* Client Facing */}
           <Typography variant="h6" sx={{ m: "2.25rem 0 1rem 20px" }}>
-            {!collapsed ? "Client" : " "}
+            {!collapsed ? "Recruitment" : " "}
           </Typography>
           <Menu
             menuItemStyles={{
@@ -127,7 +162,7 @@ const SideBar = ({ user }) => {
 
           {/* Sales */}
           <Typography variant="h6" sx={{ m: "2.25rem 0 1rem 20px" }}>
-            {!collapsed ? "Sales" : " "}
+            {!collapsed ? "Organization" : " "}
           </Typography>
           <Menu
             menuItemStyles={{
@@ -152,7 +187,7 @@ const SideBar = ({ user }) => {
 
           {/* Management */}
           <Typography variant="h6" sx={{ m: "2.25rem 0 1rem 20px" }}>
-            {!collapsed ? "Management" : " "}
+            {!collapsed ? "Other" : " "}
           </Typography>
           <Menu
             menuItemStyles={{
@@ -197,14 +232,7 @@ const SideBar = ({ user }) => {
                 width: "100%",
               }}
             >
-              <Avatar
-                sx={{
-                  height: collapsed ? "30px" : "40px",
-                  width: collapsed ? "30px" : "40px",
-                }}
-                alt={user.name}
-                src={profileImage}
-              />
+             
 
               {!collapsed && (
                 <Box textAlign="left">
@@ -222,14 +250,6 @@ const SideBar = ({ user }) => {
                     {user.occupation}
                   </Typography>
                 </Box>
-              )}
-              {!collapsed && (
-                <SettingsOutlined
-                  sx={{
-                    color: theme.palette.secondary[300],
-                    fontSize: "25px ",
-                  }}
-                />
               )}
             </Box>
           </MenuItem>

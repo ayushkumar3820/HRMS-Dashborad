@@ -1,14 +1,14 @@
-import Layout from "./layout";
+import Layout from "./Layout";
 import Dashboard from "./dashboard";
 import Products from "./products";
 import Customers from "./customers";
 import Transactions from "./transactions";
 import Geography from "./geography";
 import Overview from "./overview";
-import Daily from "./daily";
-import Monthly from "./monthly";
+import AttendanceDashboard from "./AttendanceDashboard";
+import LeaveSection from "./LeaveSection";
 import Breakdown from "./breakdown";
-import Admin from "./admin";
+import Logout1 from "./Logout1";
 import Performance from "./performance";
 
 export {
@@ -19,9 +19,9 @@ export {
   Transactions,
   Geography,
   Overview,
-  Daily,
-  Monthly,
+  AttendanceDashboard,
+  LeaveSection,
   Breakdown,
-  Admin,
+  Logout1,
   Performance,
 };

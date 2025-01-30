@@ -2,9 +2,10 @@
 import {
   ArrowDropDownOutlined,
   DarkModeOutlined,
+  MailOutlined,
   MenuOutlined,
+  NotificationsOutlined,
   SearchOutlined,
-  SettingsOutlined,
 } from "@mui/icons-material";
 import {
   Avatar,
@@ -77,7 +78,10 @@ const Navbar = ({ user }) => {
           <DarkModeOutlined sx={{ fontSize: "25px" }} />
         </IconButton>
         <IconButton>
-          <SettingsOutlined sx={{ fontSize: "25px" }} />
+          <MailOutlined sx={{ fontSize: "25px" }} />
+        </IconButton>
+        <IconButton>
+          <NotificationsOutlined sx={{ fontSize: "25px" }} />
         </IconButton>
         <Menu
           menuStyle={{
@@ -122,7 +126,9 @@ const Navbar = ({ user }) => {
           }
           transition
         >
-          <MenuItem>Log Out</MenuItem>
+          <MenuItem>Edit Profile</MenuItem>
+          <MenuItem>Change Password</MenuItem>
+          <MenuItem>Manage Notifications</MenuItem>
         </Menu>
       </Box>
     </Box>
