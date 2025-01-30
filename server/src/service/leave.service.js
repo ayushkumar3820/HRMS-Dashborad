@@ -1,4 +1,4 @@
-import Leave from '../models/Leave.js';
+import Leave from '../../src/schema/Leave.js';
 
 const applyLeave = async (req, res) => {
     try {
