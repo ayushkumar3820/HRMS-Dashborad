@@ -20,6 +20,7 @@
     "@nivo/geo": "^0.84.0",
     "@nivo/line": "^0.85.1",
     "@nivo/pie": "^0.84.0",
+    "@radix-ui/react-select": "^2.1.5",
     "@reduxjs/toolkit": "^2.2.1",
     "@szhsin/react-menu": "^4.1.0",
     "lucide-react": "^0.474.0",

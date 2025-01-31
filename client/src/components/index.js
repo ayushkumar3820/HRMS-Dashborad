@@ -6,6 +6,7 @@ import ProductCard from "./ProductCard";
 import CandidateTable from "./CandidateTable";
 import EmployeeTable from "./EmployeeTable";
 import StatBox from "./StatBox";
+
 export {
   Navbar,
   SideBar,

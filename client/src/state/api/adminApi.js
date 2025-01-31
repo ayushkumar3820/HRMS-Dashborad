@@ -32,12 +32,7 @@ export const adminApi = createApi({
       providesTags: ["Transactions"],
     }),
 
-    // Get Geography Data
-    getGeography: builder.query({
-      query: () => "client/geography",
-      providesTags: ["Geography"],
-    }),
-
+   
     // Get Sales Data
     getSales: builder.query({
       query: () => "sales/sales",
@@ -85,7 +80,7 @@ export const {
   useGetProductsQuery,
   useGetCustomersQuery,
   useGetTransactionsQuery,
-  useGetGeographyQuery,
+
   useGetSalesQuery,
   useGetDailySalesQuery,
   useGetMonthlySalesQuery,

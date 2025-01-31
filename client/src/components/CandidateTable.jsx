@@ -1,4 +1,3 @@
-// src/components/CandidateTable.jsx
 import React, { useState } from 'react';
 import {
   Table,
@@ -19,127 +18,152 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Checkbox,
   FormControlLabel,
+  Checkbox,
   DialogContentText,
+  Popper,
+  Grow,
+  ClickAwayListener,
+  MenuList,
 } from '@mui/material';
-import { Delete as DeleteIcon, Download as DownloadIcon, MoreVert as MoreVertIcon } from '@mui/icons-material';
+import { Delete as DeleteIcon, MoreVert as MoreVertIcon } from '@mui/icons-material';
 
-const candidates = [
+const employees = [
   {
     id: 1,
-    name: 'Jacob William',
-    email: 'jacob.william@example.com',
-    phone: '(252) 555-0111',
-    position: 'Senior Developer',
-    status: 'New',
-    experience: '1+',
+    name: 'Jane Copper',
+    position: 'Full Time',
+    department: 'Designer',
+    task: 'Dashboard Home page Alignment',
+    status: 'Present',
+    avatar: '/api/placeholder/32/32',
   },
   {
     id: 2,
-    name: 'Guy Hawkins',
-    email: 'kenzi.lawson@example.com',
-    phone: '(907) 555-0101',
-    position: 'Human Resource Leader',
-    status: 'New',
-    experience: '2+',
+    name: 'Arlene McCoy',
+    position: 'Full Time',
+    department: 'Designer',
+    task: 'Dashboard Login page design, Dashboard Home page design',
+    status: 'Absent',
+    avatar: '/api/placeholder/32/32',
   },
   {
     id: 3,
-    name: 'Arlene McCoy',
-    email: 'arlene.mccoy@example.com',
-    phone: '(302) 555-0107',
-    position: 'Full Time Designer',
-    status: 'Selected',
-    experience: '3+',
+    name: 'Cody Fisher',
+    position: 'Senior',
+    department: 'Backend Development',
+    task: '--',
+    status: 'Absent',
+    avatar: '/api/placeholder/32/32',
   },
   {
     id: 4,
+    name: 'Jenny Wilson',
+    position: 'Junior',
+    department: 'Backend Development',
+    task: 'Dashboard login page integration',
+    status: 'Present',
+    avatar: '/api/placeholder/32/32',
+  },
+  {
+    id: 5,
     name: 'Leslie Alexander',
-    email: 'willie.jennings@example.com',
-    phone: '(207) 555-0119',
-    position: 'Full Time Developer',
-    status: 'Rejected',
-    experience: '0',
+    position: 'Team Lead',
+    department: 'Human Resource',
+    task: '4 scheduled interview, Sorting of resumes',
+    status: 'Present',
+    avatar: '/api/placeholder/32/32',
   },
 ];
 
-const statusOptions = ['New', 'Selected', 'Rejected'];
+const statusOptions = ['Present', 'Absent', 'Medical Leave', 'Work from Home'];
 
 const CandidateTable = () => {
   const [filterStatus, setFilterStatus] = useState('');
-  const [filterPosition, setFilterPosition] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-
-  // New state for modals and form
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [isAddCandidateModalOpen, setIsAddCandidateModalOpen] = useState(false);
   const [newCandidate, setNewCandidate] = useState({
-    name: '',
+    fullName: '',
     email: '',
-    phone: '',
+    phoneNumber: '',
     position: '',
     experience: '',
-    resume: null,
+    resume: '',
+    declaration: false,
   });
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleFilterStatus = (event) => {
     setFilterStatus(event.target.value);
-  };
-
-  const handleFilterPosition = (event) => {
-    setFilterPosition(event.target.value);
   };
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
   };
 
-  // Modal handlers
-  const handleAddModalOpen = () => setIsAddModalOpen(true);
-  const handleAddModalClose = () => {
-    setIsAddModalOpen(false);
-    setNewCandidate({
-      name: '',
-      email: '',
-      phone: '',
-      position: '',
-      experience: '',
-      resume: null,
-    });
-  };
-
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setNewCandidate({ ...newCandidate, resume: file });
-    }
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Add your submission logic here
-    handleAddModalClose();
-  };
-
-  const handleDeleteConfirmation = (candidate) => {
-    setSelectedCandidate(candidate);
+  const handleDeleteConfirmation = (employee) => {
+    setSelectedEmployee(employee);
     setIsDeleteModalOpen(true);
   };
 
   const handleDelete = () => {
     // Add your delete logic here
     setIsDeleteModalOpen(false);
-    setSelectedCandidate(null);
+    setSelectedEmployee(null);
   };
 
-  const filteredCandidates = candidates.filter((candidate) => {
-    const statusMatch = filterStatus ? candidate.status === filterStatus : true;
-    const positionMatch = filterPosition ? candidate.position === filterPosition : true;
-    const searchMatch = candidate.name.toLowerCase().includes(searchQuery.toLowerCase());
-    return statusMatch && positionMatch && searchMatch;
+  const handleAddCandidateOpen = () => {
+    setIsAddCandidateModalOpen(true);
+  };
+
+  const handleAddCandidateClose = () => {
+    setIsAddCandidateModalOpen(false);
+  };
+
+  const handleAddCandidateChange = (event) => {
+    const { name, value } = event.target;
+    setNewCandidate((prevCandidate) => ({
+      ...prevCandidate,
+      [name]: value,
+    }));
+  };
+
+  const handleAddCandidateDeclarationChange = (event) => {
+    setNewCandidate((prevCandidate) => ({
+      ...prevCandidate,
+      declaration: event.target.checked,
+    }));
+  };
+
+  const handleAddCandidateSave = () => {
+    // Add your save logic here
+    setIsAddCandidateModalOpen(false);
+  };
+
+  const handleToggle = (event, employee) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedEmployee(employee);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDownloadResume = () => {
+    // Add your download resume logic here
+    setAnchorEl(null);
+  };
+
+  const filteredEmployees = employees.filter((employee) => {
+    const statusMatch = filterStatus ? employee.status === filterStatus : true;
+    const searchMatch = employee.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return statusMatch && searchMatch;
   });
+
+  const openMenu = Boolean(anchorEl);
+  const id = openMenu ? 'simple-popper' : undefined;
 
   return (
     <Box sx={{ padding: '20px', backgroundColor: '#f4f4f4', borderRadius: '8px' }}>
@@ -171,32 +195,6 @@ const CandidateTable = () => {
               </MenuItem>
             ))}
           </Select>
-          <Select
-            value={filterPosition}
-            onChange={handleFilterPosition}
-            displayEmpty
-            inputProps={{ 'aria-label': 'Without label' }}
-            sx={{
-              backgroundColor: '#fff',
-              borderRadius: '4px',
-              height: '36px',
-              '& .MuiSelect-select': {
-                padding: '8px 14px',
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                border: 'none',
-              },
-            }}
-          >
-            <MenuItem value="" disabled>
-              <em>Position</em>
-            </MenuItem>
-            {[...new Set(candidates.map((candidate) => candidate.position))].map((position) => (
-              <MenuItem key={position} value={position}>
-                {position}
-              </MenuItem>
-            ))}
-          </Select>
         </Box>
         <Box display="flex" alignItems="center" gap={2}>
           <TextField
@@ -217,13 +215,14 @@ const CandidateTable = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={handleAddModalOpen}
+            onClick={handleAddCandidateOpen}
             sx={{
-              borderRadius: '4px',
               backgroundColor: '#6A1B9A',
+              color: '#fff',
               '&:hover': {
                 backgroundColor: '#4A148C',
               },
+              borderRadius: '4px',
             }}
           >
             Add Candidate
@@ -232,30 +231,35 @@ const CandidateTable = () => {
       </Box>
 
       <TableContainer component={Paper} sx={{ borderRadius: '8px', overflow: 'hidden' }}>
-        <Table sx={{ minWidth: 650 }} aria-label="candidate table">
+        <Table sx={{ minWidth: 650 }} aria-label="attendance table">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Sr no.</TableCell>
-              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Candidates Name</TableCell>
-              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Email Address</TableCell>
-              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Phone Number</TableCell>
+              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Profile</TableCell>
+              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Employee Name</TableCell>
               <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Position</TableCell>
+              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Department</TableCell>
+              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Task</TableCell>
               <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Status</TableCell>
-              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Experience</TableCell>
               <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredCandidates.map((candidate, index) => (
-              <TableRow key={candidate.id}>
-                <TableCell sx={{ padding: '8px 16px' }}>{index + 1}</TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>{candidate.name}</TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>{candidate.email}</TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>{candidate.phone}</TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>{candidate.position}</TableCell>
+            {filteredEmployees.map((employee) => (
+              <TableRow key={employee.id}>
+                <TableCell sx={{ padding: '8px 16px' }}>
+                  <img
+                    src={employee.avatar}
+                    alt={employee.name}
+                    className="w-8 h-8 rounded-full"
+                  />
+                </TableCell>
+                <TableCell sx={{ padding: '8px 16px' }}>{employee.name}</TableCell>
+                <TableCell sx={{ padding: '8px 16px' }}>{employee.position}</TableCell>
+                <TableCell sx={{ padding: '8px 16px' }}>{employee.department}</TableCell>
+                <TableCell sx={{ padding: '8px 16px' }}>{employee.task}</TableCell>
                 <TableCell sx={{ padding: '8px 16px' }}>
                   <Select
-                    value={candidate.status}
+                    value={employee.status}
                     onChange={(event) => {
                       // Handle status change
                     }}
@@ -276,8 +280,8 @@ const CandidateTable = () => {
                         key={status}
                         value={status}
                         sx={{
-                          fontWeight: candidate.status === status ? 'bold' : 'normal',
-                          color: status === 'Rejected' ? '#E53935' : status === 'Selected' ? '#4CAF50' : '#6A1B9A',
+                          fontWeight: employee.status === status ? 'bold' : 'normal',
+                          color: status === 'Absent' ? '#E53935' : status === 'Present' ? '#4CAF50' : '#6A1B9A',
                         }}
                       >
                         {status}
@@ -285,41 +289,11 @@ const CandidateTable = () => {
                     ))}
                   </Select>
                 </TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>{candidate.experience}</TableCell>
                 <TableCell sx={{ padding: '8px 16px' }}>
                   <IconButton
                     color="primary"
-                    aria-label="download resume"
-                    sx={{
-                      backgroundColor: '#6A1B9A',
-                      color: '#fff',
-                      '&:hover': {
-                        backgroundColor: '#4A148C',
-                      },
-                      borderRadius: '4px',
-                    }}
-                  >
-                    <DownloadIcon />
-                  </IconButton>
-                  <IconButton
-                    color="secondary"
-                    aria-label="delete candidate"
-                    onClick={() => handleDeleteConfirmation(candidate)}
-                    sx={{
-                      backgroundColor: '#E53935',
-                      color: '#fff',
-                      '&:hover': {
-                        backgroundColor: '#D32F2F',
-                      },
-                      borderRadius: '4px',
-                      marginLeft: '8px',
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                  <IconButton
-                    color="primary"
                     aria-label="more options"
+                    onClick={(event) => handleToggle(event, employee)}
                     sx={{
                       backgroundColor: '#6A1B9A',
                       color: '#fff',
@@ -327,11 +301,29 @@ const CandidateTable = () => {
                         backgroundColor: '#4A148C',
                       },
                       borderRadius: '4px',
-                      marginLeft: '8px',
                     }}
                   >
                     <MoreVertIcon />
                   </IconButton>
+                  <Popper open={openMenu} anchorEl={anchorEl} role={undefined} transition disablePortal>
+                    {({ TransitionProps, placement }) => (
+                      <Grow
+                        {...TransitionProps}
+                        style={{
+                          transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                        }}
+                      >
+                        <Paper>
+                          <ClickAwayListener onClickAway={handleClose}>
+                            <MenuList autoFocusItem={openMenu} id={id} onKeyDown={(e) => handleClose(e)}>
+                              <MenuItem onClick={handleDownloadResume}>Download Resume</MenuItem>
+                              <MenuItem onClick={() => handleDeleteConfirmation(employee)}>Delete Candidate</MenuItem>
+                            </MenuList>
+                          </ClickAwayListener>
+                        </Paper>
+                      </Grow>
+                    )}
+                  </Popper>
                 </TableCell>
               </TableRow>
             ))}
@@ -339,96 +331,89 @@ const CandidateTable = () => {
         </Table>
       </TableContainer>
 
-      {/* Add Candidate Modal */}
-      <Dialog open={isAddModalOpen} onClose={handleAddModalClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Add New Candidate</DialogTitle>
-        <form onSubmit={handleSubmit}>
-          <DialogContent>
-            <TextField
-              label="Full Name"
-              required
-              fullWidth
-              margin="dense"
-              value={newCandidate.name}
-              onChange={(e) => setNewCandidate({ ...newCandidate, name: e.target.value })}
-            />
-            <TextField
-              label="Email Address"
-              required
-              fullWidth
-              margin="dense"
-              type="email"
-              value={newCandidate.email}
-              onChange={(e) => setNewCandidate({ ...newCandidate, email: e.target.value })}
-            />
-            <TextField
-              label="Phone Number"
-              required
-              fullWidth
-              margin="dense"
-              value={newCandidate.phone}
-              onChange={(e) => setNewCandidate({ ...newCandidate, phone: e.target.value })}
-            />
-            <TextField
-              label="Position"
-              required
-              fullWidth
-              margin="dense"
-              value={newCandidate.position}
-              onChange={(e) => setNewCandidate({ ...newCandidate, position: e.target.value })}
-            />
-            <TextField
-              label="Experience"
-              required
-              fullWidth
-              margin="dense"
-              value={newCandidate.experience}
-              onChange={(e) => setNewCandidate({ ...newCandidate, experience: e.target.value })}
-            />
-            <Box sx={{ mt: 2 }}>
-              <input
-                accept=".pdf,.doc,.docx"
-                type="file"
-                onChange={handleFileUpload}
-                style={{ display: 'none' }}
-                id="resume-file"
-              />
-              <label htmlFor="resume-file">
-                <Button variant="contained" component="span">
-                  Upload Resume
-                </Button>
-              </label>
-              {newCandidate.resume && (
-                <Typography sx={{ ml: 2 }}>{newCandidate.resume.name}</Typography>
-              )}
-            </Box>
-            <FormControlLabel
-              control={<Checkbox required />}
-              label="I hereby declare that the above information is true to the best of my knowledge and belief"
-              sx={{ mt: 2 }}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleAddModalClose}>Cancel</Button>
-            <Button type="submit" variant="contained" color="primary">
-              Save
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
-
       {/* Delete Confirmation Modal */}
       <Dialog open={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
-        <DialogTitle>Delete Candidate</DialogTitle>
+        <DialogTitle>Delete Employee</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this candidate?
+            Are you sure you want to delete this employee?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button>
           <Button onClick={handleDelete} color="error" variant="contained">
             Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Add Candidate Modal */}
+      <Dialog open={isAddCandidateModalOpen} onClose={handleAddCandidateClose}>
+        <DialogTitle>Add New Candidate</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Full Name*"
+            name="fullName"
+            value={newCandidate.fullName}
+            onChange={handleAddCandidateChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Email Address*"
+            name="email"
+            value={newCandidate.email}
+            onChange={handleAddCandidateChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Phone Number*"
+            name="phoneNumber"
+            value={newCandidate.phoneNumber}
+            onChange={handleAddCandidateChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Position*"
+            name="position"
+            value={newCandidate.position}
+            onChange={handleAddCandidateChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Experience*"
+            name="experience"
+            value={newCandidate.experience}
+            onChange={handleAddCandidateChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Resume*"
+            name="resume"
+            value={newCandidate.resume}
+            onChange={handleAddCandidateChange}
+            fullWidth
+            margin="normal"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={newCandidate.declaration}
+                onChange={handleAddCandidateDeclarationChange}
+                color="primary"
+              />
+            }
+            label="I hereby declare that the above information is true to the best of my knowledge and belief"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAddCandidateClose}>Cancel</Button>
+          <Button onClick={handleAddCandidateSave} variant="contained" color="primary">
+            Save
           </Button>
         </DialogActions>
       </Dialog>
