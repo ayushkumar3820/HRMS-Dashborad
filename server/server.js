@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import connectDB from "./config/data.js";
 import dotenv from "dotenv";
-import userRoutes from './Router/user.router.js';
+import userRoutes from './route/user.route.js';
 // import { authMiddleware, authorizeRoles } from './middleware/authMiddleware.js';
-import { notFound, errorHandler } from './src/middleware/errorMiddleware.js';
+import { errorHandler ,notFound } from './middleware/error.middleware.js';
 
 dotenv.config();
 

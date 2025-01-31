@@ -14,19 +14,28 @@ const candidateSchema = new mongoose.Schema({
         lowercase: true,
         match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please provide a valid email']
     },
-    phone: {
+    phoneNumber: {
         type: String,
         required: [true, 'Phone number is required'],
         trim: true
     },
-    resume: {
+    position: {
         type: String,
-        required: [true, 'Resume is required']
+        required: [true, 'pos.. is required'],
+        trim: true
     },
     status: {
         type: String,
         enum: ['applied', 'interview', 'selected', 'rejected'],
         default: 'applied'
+    },
+    resumeUrl: {
+        type: String,
+        required: [true, 'Resume is required']
+    },
+    experience: {
+        type: Number,
+        required: [true, 'Experience is required']
     },
     createdAt: {
         type: Date,
