@@ -1,5 +1,4 @@
 import React from 'react';
-
 const Button = ({ children, className = '', variant = 'solid', size = 'md', ...props }) => {
   const baseClasses = 'inline-flex items-center px-4 py-2 border border-transparent rounded-md';
   const variantClasses = {

@@ -1,40 +1,29 @@
-import {
-  Navigate,
-  Route,
-  createBrowserRouter,
-  createRoutesFromElements,
-} from "react-router-dom";
-import {
-  Layout,
-  Dashboard,
-  Products,
-  Customers,
-  Transactions,
-  Geography,
-  Overview,
-  AttendanceDashboard,
-  LeaveSection,
-  Breakdown,
-  Logout1,  
-  Performance,
-} from "../scenes";
+import * as reactRouterDom from "react-router-dom";
+import * as scenes from "../scenes";
 
-const Router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<Layout />}>
-      <Route index element={<Navigate to="dashboard" replace />} />
-      <Route path="dashboard" element={<Dashboard />} />
-      <Route path="products" element={<Products />} />
-      <Route path="customers" element={<Customers />} />
-      <Route path="transactions" element={<Transactions />} />
-      <Route path="geography" element={<Geography />} />
-      <Route path="overview" element={<Overview />} />
-      <Route path="AttendanceDashboard" element={<AttendanceDashboard />} /> {/* Match the URL case */}
-      <Route path="LeaveSection" element={<LeaveSection />} /> {/* Match the URL case */}
-      <Route path="breakdown" element={<Breakdown />} />
-      <Route path="logout" element={<Logout1 />} />
-      <Route path="performance" element={<Performance />} />
-    </Route>
+const Router = reactRouterDom.createBrowserRouter(
+  reactRouterDom.createRoutesFromElements(
+    <>
+      {/* Public Routes (No Sidebar) */}
+      <reactRouterDom.Route path="signup" element={<scenes.LoginPage />} />
+      <reactRouterDom.Route path="login" element={<scenes.LoginPage />} />
+
+      {/* Protected Routes (With Sidebar) */}
+      <reactRouterDom.Route path="/" element={<scenes.Layout />}>
+        <reactRouterDom.Route index element={<reactRouterDom.Navigate to="login" replace />} />
+        <reactRouterDom.Route path="dashboard" element={<scenes.Dashboard />} />
+        <reactRouterDom.Route path="leave" element={<scenes.LeaveCalendar />} />
+        <reactRouterDom.Route path="products" element={<scenes.Products />} />
+        <reactRouterDom.Route path="customers" element={<scenes.Customers />} />
+        <reactRouterDom.Route path="transactions" element={<scenes.Transactions />} />
+       
+        <reactRouterDom.Route path="overview" element={<scenes.Overview />} />
+        <reactRouterDom.Route path="AttendanceDashboard" element={<scenes.AttendanceDashboard />} />
+        <reactRouterDom.Route path="LeaveSection" element={<scenes.LeaveSection />} />
+        <reactRouterDom.Route path="breakdown" element={<scenes.Breakdown />} />
+        <reactRouterDom.Route path="logout" element={<scenes.Logout1 />} />
+      </reactRouterDom.Route>
+    </>
   )
 );
 

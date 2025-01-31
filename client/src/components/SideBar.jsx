@@ -9,6 +9,7 @@ import profileImage from "../assets/images/profile.jpeg";
 import logo from "../assets/images/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { setToggled } from "../state/global/GlobalSlice";
+import { LoginPage } from "../components/login";
 
 const SideBar = ({ user }) => {
   const collapsed = useSelector((state) => state.global.collapsed);
@@ -184,7 +185,6 @@ const SideBar = ({ user }) => {
               />
             ))}
           </Menu>
-
           {/* Management */}
           <Typography variant="h6" sx={{ m: "2.25rem 0 1rem 20px" }}>
             {!collapsed ? "Other" : " "}

@@ -1,108 +1,268 @@
-.leave-section {
-    display: flex;
-  }
-  
-  .sidebar {
-    width: 200px;
-    background-color: #f4f4f4;
-    padding: 20px;
-  }
-  
-  .logo {
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  .search-bar input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .menu ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .menu li {
-    padding: 10px 0;
-    cursor: pointer;
-  }
-  
-  .menu .active {
-    font-weight: bold;
-  }
-  
-  .main-content {
-    flex: 1;
-    padding: 20px;
-  }
-  
-  .leave-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .header-buttons {
-    display: flex;
-    align-items: center;
-  }
-  
-  .search-input {
-    padding: 10px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .add-leave-button {
-    padding: 10px 20px;
-    background-color: #6a0dad;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .leave-content {
-    margin-top: 20px;
-    display: flex;
-  }
-  
-  .applied-leaves, .leave-calendar {
-    flex: 1;
-    margin-right: 20px;
-  }
-  
-  .applied-leaves table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .applied-leaves th, .applied-leaves td {
-    padding: 10px;
-    border: 1px solid #ccc;
-    text-align: left;
-  }
-  
-  .applied-leaves th {
-    background-color: #6a0dad;
-    color: white;
-  }
-  
-  .applied-leaves button {
-    padding: 5px 10px;
-    background-color: #6a0dad;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .leave-calendar .calendar {
-    /* Calendar component can be styled here */
-  }
-  
+.main-container {
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #fafafa;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Panel Styling */
+.panel {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.panel-header {
+  background: #8b5cf6;
+  color: white;
+  padding: 16px;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Leave List Styling */
+.leave-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto auto;
+  gap: 16px;
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
+.leave-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto auto;
+  gap: 16px;
+  padding: 12px 16px;
+  align-items: center;
+}
+
+.profile-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f3f4f6;
+}
+
+.employee-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.designation {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.status-pill {
+  padding: 6px 16px;
+  background: rgba(139, 92, 246, 0.1);
+  color: #8b5cf6;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+/* Calendar Styling */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.month-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.month-nav button {
+  border: none;
+  background: none;
+  color: #8b5cf6;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.calendar {
+  padding: 16px;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.day.selected {
+  background: rgba(139, 92, 246, 0.1);
+  color: #8b5cf6;
+}
+
+/* Approved Section */
+.approved-section {
+  padding: 16px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.approved-section h3 {
+  color: #8b5cf6;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.approved-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.approved-date {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Modal Styling */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  overflow: hidden;
+}
+
+.modal-header {
+  background: #8b5cf6;
+  color: white;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-field {
+  position: relative;
+}
+
+.form-field input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.form-field input::placeholder {
+  color: #9ca3af;
+}
+
+.document-button {
+  width: 100%;
+  padding: 12px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #9ca3af;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Date Picker Popup */
+.date-picker {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 4px;
+  z-index: 60;
+}
+
+.picker-header {
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Add Leave Button */
+.add-leave-button {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #8b5cf6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
