@@ -1,4 +1,4 @@
-import Layout from "./Layout";
+import Layout from "./layout";
 import Dashboard from "./dashboard";
 import Products from "./products";
 import Customers from "./customers";
@@ -18,7 +18,6 @@ export {
   Products,
   Customers,
   Transactions,
-  
   Overview,
   AttendanceDashboard,
   LeaveSection,

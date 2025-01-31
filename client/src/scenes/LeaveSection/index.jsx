@@ -1,141 +1,219 @@
 import React, { useState } from 'react';
-import './LeaveSection.css';
-import { X } from 'lucide-react';
+import { Calendar as CalendarIcon, Search, Filter, X, Upload, ChevronLeft, ChevronRight } from 'lucide-react';
+import './LeaveSection.css'; // Import the CSS file for styling
 
-const LeaveSection = () => {
+function LeaveSection() {
   const [showModal, setShowModal] = useState(false);
-  const [showCalendarPicker, setShowCalendarPicker] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  const dummyLeaves = [
+    {
+      id: '1',
+      name: 'Cody Fisher',
+      date: '2024-08-09',
+      reason: 'Visiting House',
+      status: 'Approved',
+      designation: 'Senior Backend Developer'
+    },
+    // Add more dummy data as needed
+  ];
+
+  const filteredLeaves = dummyLeaves.filter(leave => {
+    const matchesSearch = leave.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'All' || leave.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  const getDaysInMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  };
 
   return (
-    <div className="main-container">
-      <div className="content-grid">
-        {/* Left Panel */}
-        <button className="add-leave-button" onClick={() => setShowModal(true)}>
-        Add Leave
-      </button>
-        <div className="panel">
-          <div className="panel-header">
-            <h2>Applied Leaves</h2>
-            <div className="leave-header">
-              <span>Profile</span>
-              <span>Name</span>
-              <span>Date</span>
-              <span>Reason</span>
-              <span>Status</span>
-              <span>Docs</span>
+    <div className="container">
+      <div className="content">
+        <div className="header">
+          <div className="filters">
+            <div className="filter-select">
+              <select
+                className="select"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option value="All">Status</option>
+                <option value="Approved">Approved</option>
+                <option value="Pending">Pending</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+              <Filter className="filter-icon" />
+            </div>
+            <div className="search-input">
+              <input
+                type="text"
+                placeholder="Search"
+                className="input"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <Search className="search-icon" />
             </div>
           </div>
-          <div className="leave-item">
-            <div className="profile-circle"></div>
-            <div className="employee-details">
-              <div>Cody Fisher</div>
-              <div className="designation">Senior Backend Developer</div>
-            </div>
-            <div>8/09/24</div>
-            <div>Visiting House</div>
-            <div className="status-pill">Approved ▾</div>
-          </div>
+          <button
+            onClick={() => setShowModal(true)}
+            className="add-leave-btn"
+          >
+            Add Leave
+          </button>
         </div>
 
-        {/* Right Panel */}
-        <div className="panel">
-          <div className="calendar-header">
-            <h2>Leave Calendar</h2>
-            <div className="month-nav">
-              <button>‹</button>
-              <span>September, 2024</span>
-              <button>›</button>
-            </div>
-          </div>
-          
-          <div className="calendar">
-            <div className="weekdays">
-              <div>S</div>
-              <div>M</div>
-              <div>T</div>
-              <div>W</div>
-              <div>T</div>
-              <div>F</div>
-              <div>S</div>
-            </div>
-            <div className="days">
-              {[...Array(31)].map((_, i) => (
-                <div key={i} className={i + 1 === 8 ? 'day selected' : 'day'}>
-                  {i + 1}
-                </div>
-              ))}
+        <div className="grid">
+          <div className="applied-leaves">
+            <div className="card">
+              <h2 className="card-title">Applied Leaves</h2>
+              <div className="leaves-list">
+                {filteredLeaves.map((leave) => (
+                  <div key={leave.id} className="leave-item">
+                    <div className="leave-details">
+                      <img
+                        src={`https://source.unsplash.com/random/40x40?face&${leave.id}`}
+                        alt={leave.name}
+                        className="avatar"
+                      />
+                      <div>
+                        <h3 className="leave-name">{leave.name}</h3>
+                        <p className="leave-designation">{leave.designation}</p>
+                      </div>
+                    </div>
+                    <div className="leave-date">{leave.date}</div>
+                    <div className="leave-reason">{leave.reason}</div>
+                    <div className={`leave-status ${leave.status.toLowerCase()}`}>
+                      {leave.status}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="approved-section">
-            <h3>Approved Leaves</h3>
-            <div className="approved-item">
-              <div className="profile-circle"></div>
-              <div className="employee-details">
-                <div>Cody Fisher</div>
-                <div className="designation">Senior Backend Developer</div>
+          <div className="leave-calendar">
+            <div className="card">
+              <h2 className="card-title">Leave Calendar</h2>
+              <div className="calendar-header">
+                <button onClick={() => setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() - 1)))}>
+                  <ChevronLeft className="icon" />
+                </button>
+                <h3 className="calendar-month">
+                  {currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                </h3>
+                <button onClick={() => setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() + 1)))}>
+                  <ChevronRight className="icon" />
+                </button>
               </div>
-              <div className="approved-date">8/09/24</div>
+              <div className="calendar-grid">
+                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day) => (
+                  <div key={day} className="calendar-day-label">
+                    {day}
+                  </div>
+                ))}
+                {[...Array(getFirstDayOfMonth(currentMonth))].map((_, i) => (
+                  <div key={`empty-${i}`} className="calendar-day-empty"></div>
+                ))}
+                {[...Array(getDaysInMonth(currentMonth))].map((_, i) => (
+                  <div
+                    key={i + 1}
+                    className={`calendar-day ${
+                      filteredLeaves.some(leave => new Date(leave.date).getDate() === i + 1)
+                        ? 'has-leave'
+                        : ''
+                    }`}
+                  >
+                    {i + 1}
+                  </div>
+                ))}
+              </div>
+              <div className="approved-leaves">
+                <h3>Approved Leaves</h3>
+                {filteredLeaves.map((leave) => (
+                  <div key={leave.id} className="approved-leave-item">
+                    <div className="leave-details">
+                      <img
+                        src={`https://source.unsplash.com/random/40x40?face&${leave.id}`}
+                        alt={leave.name}
+                        className="avatar"
+                      />
+                      <div>
+                        <h3 className="leave-name">{leave.name}</h3>
+                        <p className="leave-designation">{leave.designation}</p>
+                      </div>
+                    </div>
+                    <div className="leave-date">{leave.date}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Add Leave Modal */}
       {showModal && (
-        <div className="modal-overlay">
+        <div className="modal-backdrop">
           <div className="modal">
             <div className="modal-header">
-              <span>Add New Leave</span>
-              <button onClick={() => setShowModal(false)}>
-                <X size={20} />
+              <h2 className="modal-title">Add New Leave</h2>
+              <button onClick={() => setShowModal(false)} className="close-btn">
+                <X className="icon" />
               </button>
             </div>
-            <div className="modal-body">
-              <div className="input-group">
-                <div className="form-field">
-                  <input type="text" placeholder="Search Employee Name" />
-                  {/* Add X button when input has value */}
-                </div>
-                <div className="form-field">
-                  <input type="text" placeholder="Designation*" />
-                </div>
-                <div className="form-field">
-                  <input 
-                    type="text" 
-                    placeholder="Leave Date*"
-                    onClick={() => setShowCalendarPicker(!showCalendarPicker)}
-                  />
-                  {showCalendarPicker && (
-                    <div className="date-picker">
-                      <div className="picker-header">
-                        <button>‹</button>
-                        <span>September, 2024</span>
-                        <button>›</button>
-                      </div>
-                      <div className="picker-calendar">
-                        {/* Calendar content */}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="form-field">
-                  <input type="text" placeholder="Reason*" />
-                </div>
-                <div className="form-field">
-                  <button className="document-button">
-                    <span>Documents</span>
-                    <span>↓</span>
-                  </button>
-                </div>
+            <form className="modal-form">
+              <div className="form-group">
+                <input
+                  type="text"
+                  placeholder="Search Employee Name"
+                  className="input"
+                />
               </div>
-            </div>
+              <div className="form-group">
+                <input
+                  type="text"
+                  placeholder="Designation*"
+                  className="input"
+                />
+              </div>
+              <div className="form-group">
+                <input
+                  type="date"
+                  placeholder="Leave Date*"
+                  className="input"
+                />
+              </div>
+              <div className="form-group">
+                <textarea
+                  placeholder="Reason*"
+                  className="textarea"
+                  rows={3}
+                />
+              </div>
+              <div className="form-group upload-section">
+                <Upload className="upload-icon" />
+                <p className="upload-text">Upload Documents</p>
+              </div>
+              <button
+                type="submit"
+                className="save-btn"
+              >
+                Save
+              </button>
+            </form>
           </div>
         </div>
       )}
-
     </div>
   );
-};
+}
 
 export default LeaveSection;

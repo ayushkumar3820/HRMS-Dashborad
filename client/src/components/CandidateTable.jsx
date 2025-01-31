@@ -76,10 +76,12 @@ const employees = [
   },
 ];
 
-const statusOptions = ['Present', 'Absent', 'Medical Leave', 'Work from Home'];
+const statusOptions = ['Scheduled', 'Ongoing', 'Selected', 'Rejected'];
+const positionOptions = ['Designer', 'Backend Development', 'Human Resource', ''];
 
 const CandidateTable = () => {
   const [filterStatus, setFilterStatus] = useState('');
+  const [positionStatus, setPositionStatus] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
@@ -97,6 +99,10 @@ const CandidateTable = () => {
 
   const handleFilterStatus = (event) => {
     setFilterStatus(event.target.value);
+  };
+
+  const handlePositionStatus = (event) => {
+    setPositionStatus(event.target.value);
   };
 
   const handleSearch = (event) => {
@@ -158,8 +164,9 @@ const CandidateTable = () => {
 
   const filteredEmployees = employees.filter((employee) => {
     const statusMatch = filterStatus ? employee.status === filterStatus : true;
+    const positionMatch = positionStatus ? employee.department === positionStatus : true;
     const searchMatch = employee.name.toLowerCase().includes(searchQuery.toLowerCase());
-    return statusMatch && searchMatch;
+    return statusMatch && positionMatch && searchMatch;
   });
 
   const openMenu = Boolean(anchorEl);
@@ -170,6 +177,32 @@ const CandidateTable = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Box display="flex" gap={2}>
           <Select
+            value={filterStatus}
+            onChange={handleFilterStatus}
+            displayEmpty
+            inputProps={{ 'aria-label': 'Without label' }}
+            sx={{
+              backgroundColor: '#fff',
+              borderRadius: '4px',
+              height: '36px',
+              '& .MuiSelect-select': {
+                padding: '8px 14px',
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                border: 'none',
+              },
+            }}
+          >
+            <MenuItem value="" disabled>
+              <em>Status</em>
+            </MenuItem>
+            {statusOptions.map((status) => (
+              <MenuItem key={status} value={status}>
+                {status}
+              </MenuItem>
+            ))}
+          </Select>
+         <Select
             value={filterStatus}
             onChange={handleFilterStatus}
             displayEmpty
