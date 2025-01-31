@@ -5,7 +5,7 @@ let jwtToken = process.env.JWT_SECRET;
 
 const register = async (req, res) => {
   try {
-    const { fullName, email, password, role } = req.body;
+    const { fullName, email, password } = req.body;
     const checkExistingUser = await User.findOne({ email });
     if (checkExistingUser) {
       return res.status(400).json({ message: "User already exists" });
@@ -15,7 +15,6 @@ const register = async (req, res) => {
       email,
       password,
       confirm_password: password,
-      role,
     });
     await newUser.save();
     res
@@ -34,7 +33,7 @@ const login = async (req, res) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
     const token = jwt.sign(
-      { userId: user._id, role: user.role },
+      { userId: user._id,  },
       `${jwtToken}`,
       { expiresIn: "2h" }
     );

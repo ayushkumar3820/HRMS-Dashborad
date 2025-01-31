@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './logout.css';
 
 const Logout1 = () => {
   const [showLogout, setShowLogout] = useState(true);
 
-  const handleLogout = () => {
-    console.log("Logging out...");
-    setShowLogout(false);
+  const handleLogout = async () => {
+    try {
+      console.log("Logging out...");
+      await axios.post('http://localhost:5000/api/auth/logout');
+      console.log("Logout successful");
+      setShowLogout(false);
+      // Optionally, you can redirect the user to the login page or home page
+      // window.location.href = '/login';
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   return (

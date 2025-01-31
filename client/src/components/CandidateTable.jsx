@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   Table,
   TableBody,
@@ -13,7 +14,6 @@ import {
   TextField,
   Box,
   IconButton,
-  Typography,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -28,63 +28,16 @@ import {
 } from '@mui/material';
 import { Delete as DeleteIcon, MoreVert as MoreVertIcon } from '@mui/icons-material';
 
-const employees = [
-  {
-    id: 1,
-    name: 'Jane Copper',
-    position: 'Full Time',
-    department: 'Designer',
-    task: 'Dashboard Home page Alignment',
-    status: 'Present',
-    avatar: '/api/placeholder/32/32',
-  },
-  {
-    id: 2,
-    name: 'Arlene McCoy',
-    position: 'Full Time',
-    department: 'Designer',
-    task: 'Dashboard Login page design, Dashboard Home page design',
-    status: 'Absent',
-    avatar: '/api/placeholder/32/32',
-  },
-  {
-    id: 3,
-    name: 'Cody Fisher',
-    position: 'Senior',
-    department: 'Backend Development',
-    task: '--',
-    status: 'Absent',
-    avatar: '/api/placeholder/32/32',
-  },
-  {
-    id: 4,
-    name: 'Jenny Wilson',
-    position: 'Junior',
-    department: 'Backend Development',
-    task: 'Dashboard login page integration',
-    status: 'Present',
-    avatar: '/api/placeholder/32/32',
-  },
-  {
-    id: 5,
-    name: 'Leslie Alexander',
-    position: 'Team Lead',
-    department: 'Human Resource',
-    task: '4 scheduled interview, Sorting of resumes',
-    status: 'Present',
-    avatar: '/api/placeholder/32/32',
-  },
-];
-
 const statusOptions = ['Scheduled', 'Ongoing', 'Selected', 'Rejected'];
 const positionOptions = ['Designer', 'Backend Development', 'Human Resource', ''];
 
 const CandidateTable = () => {
+  const [candidates, setCandidates] = useState([]);
   const [filterStatus, setFilterStatus] = useState('');
   const [positionStatus, setPositionStatus] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [isAddCandidateModalOpen, setIsAddCandidateModalOpen] = useState(false);
   const [newCandidate, setNewCandidate] = useState({
     fullName: '',
@@ -96,6 +49,24 @@ const CandidateTable = () => {
     declaration: false,
   });
   const [anchorEl, setAnchorEl] = useState(null);
+
+  useEffect(() => {
+    fetchCandidates();
+  }, []);
+
+  const fetchCandidates = async () => {
+    try {
+      const response = await axios.get('/api/candidates');
+      if (Array.isArray(response.data)) {
+        setCandidates(response.data);
+      } else {
+        setCandidates([]);
+      }
+    } catch (error) {
+      console.error('Error fetching candidates:', error);
+      setCandidates([]);
+    }
+  };
 
   const handleFilterStatus = (event) => {
     setFilterStatus(event.target.value);
@@ -109,15 +80,20 @@ const CandidateTable = () => {
     setSearchQuery(event.target.value);
   };
 
-  const handleDeleteConfirmation = (employee) => {
-    setSelectedEmployee(employee);
+  const handleDeleteConfirmation = (candidate) => {
+    setSelectedCandidate(candidate);
     setIsDeleteModalOpen(true);
   };
 
-  const handleDelete = () => {
-    // Add your delete logic here
-    setIsDeleteModalOpen(false);
-    setSelectedEmployee(null);
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/api/candidates/${selectedCandidate.id}`);
+      fetchCandidates();
+      setIsDeleteModalOpen(false);
+      setSelectedCandidate(null);
+    } catch (error) {
+      console.error('Error deleting candidate:', error);
+    }
   };
 
   const handleAddCandidateOpen = () => {
@@ -143,14 +119,28 @@ const CandidateTable = () => {
     }));
   };
 
-  const handleAddCandidateSave = () => {
-    // Add your save logic here
-    setIsAddCandidateModalOpen(false);
+  const handleAddCandidateSave = async () => {
+    try {
+      await axios.post('/api/candidates/create', newCandidate);
+      fetchCandidates();
+      setIsAddCandidateModalOpen(false);
+      setNewCandidate({
+        fullName: '',
+        email: '',
+        phoneNumber: '',
+        position: '',
+        experience: '',
+        resume: '',
+        declaration: false,
+      });
+    } catch (error) {
+      console.error('Error adding candidate:', error);
+    }
   };
 
-  const handleToggle = (event, employee) => {
+  const handleToggle = (event, candidate) => {
     setAnchorEl(event.currentTarget);
-    setSelectedEmployee(employee);
+    setSelectedCandidate(candidate);
   };
 
   const handleClose = () => {
@@ -162,10 +152,10 @@ const CandidateTable = () => {
     setAnchorEl(null);
   };
 
-  const filteredEmployees = employees.filter((employee) => {
-    const statusMatch = filterStatus ? employee.status === filterStatus : true;
-    const positionMatch = positionStatus ? employee.department === positionStatus : true;
-    const searchMatch = employee.name.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredCandidates = candidates.filter((candidate) => {
+    const statusMatch = filterStatus ? candidate.status === filterStatus : true;
+    const positionMatch = positionStatus ? candidate.department === positionStatus : true;
+    const searchMatch = candidate.name.toLowerCase().includes(searchQuery.toLowerCase());
     return statusMatch && positionMatch && searchMatch;
   });
 
@@ -202,9 +192,9 @@ const CandidateTable = () => {
               </MenuItem>
             ))}
           </Select>
-         <Select
-            value={filterStatus}
-            onChange={handleFilterStatus}
+          <Select
+            value={positionStatus}
+            onChange={handlePositionStatus}
             displayEmpty
             inputProps={{ 'aria-label': 'Without label' }}
             sx={{
@@ -220,11 +210,11 @@ const CandidateTable = () => {
             }}
           >
             <MenuItem value="" disabled>
-              <em>Status</em>
+              <em>Position</em>
             </MenuItem>
-            {statusOptions.map((status) => (
-              <MenuItem key={status} value={status}>
-                {status}
+            {positionOptions.map((position) => (
+              <MenuItem key={position} value={position}>
+                {position}
               </MenuItem>
             ))}
           </Select>
@@ -277,22 +267,22 @@ const CandidateTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredEmployees.map((employee) => (
-              <TableRow key={employee.id}>
+            {filteredCandidates.map((candidate) => (
+              <TableRow key={candidate.id}>
                 <TableCell sx={{ padding: '8px 16px' }}>
                   <img
-                    src={employee.avatar}
-                    alt={employee.name}
+                    src={candidate.avatar}
+                    alt={candidate.name}
                     className="w-8 h-8 rounded-full"
                   />
                 </TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>{employee.name}</TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>{employee.position}</TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>{employee.department}</TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>{employee.task}</TableCell>
+                <TableCell sx={{ padding: '8px 16px' }}>{candidate.name}</TableCell>
+                <TableCell sx={{ padding: '8px 16px' }}>{candidate.position}</TableCell>
+                <TableCell sx={{ padding: '8px 16px' }}>{candidate.department}</TableCell>
+                <TableCell sx={{ padding: '8px 16px' }}>{candidate.task}</TableCell>
                 <TableCell sx={{ padding: '8px 16px' }}>
                   <Select
-                    value={employee.status}
+                    value={candidate.status}
                     onChange={(event) => {
                       // Handle status change
                     }}
@@ -313,7 +303,7 @@ const CandidateTable = () => {
                         key={status}
                         value={status}
                         sx={{
-                          fontWeight: employee.status === status ? 'bold' : 'normal',
+                          fontWeight: candidate.status === status ? 'bold' : 'normal',
                           color: status === 'Absent' ? '#E53935' : status === 'Present' ? '#4CAF50' : '#6A1B9A',
                         }}
                       >
@@ -326,7 +316,7 @@ const CandidateTable = () => {
                   <IconButton
                     color="primary"
                     aria-label="more options"
-                    onClick={(event) => handleToggle(event, employee)}
+                    onClick={(event) => handleToggle(event, candidate)}
                     sx={{
                       backgroundColor: '#6A1B9A',
                       color: '#fff',
@@ -350,7 +340,7 @@ const CandidateTable = () => {
                           <ClickAwayListener onClickAway={handleClose}>
                             <MenuList autoFocusItem={openMenu} id={id} onKeyDown={(e) => handleClose(e)}>
                               <MenuItem onClick={handleDownloadResume}>Download Resume</MenuItem>
-                              <MenuItem onClick={() => handleDeleteConfirmation(employee)}>Delete Candidate</MenuItem>
+                              <MenuItem onClick={() => handleDeleteConfirmation(candidate)}>Delete Candidate</MenuItem>
                             </MenuList>
                           </ClickAwayListener>
                         </Paper>
@@ -366,10 +356,10 @@ const CandidateTable = () => {
 
       {/* Delete Confirmation Modal */}
       <Dialog open={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
-        <DialogTitle>Delete Employee</DialogTitle>
+        <DialogTitle>Delete Candidate</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this employee?
+            Are you sure you want to delete this candidate?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

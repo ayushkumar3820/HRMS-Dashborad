@@ -12,7 +12,7 @@ const router = express.Router();
 
 
 
-router.post('/auth/register',  authMiddleware ,validation.validateRegister, register);
+router.post('/auth/register', register);
 router.post('/auth/login', authMiddleware ,validation.login, login);
 router.post('auth/logout', authMiddleware,  logout);
 router.post('/candidates/create', authMiddleware, createCandidate);
