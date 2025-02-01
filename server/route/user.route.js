@@ -13,10 +13,10 @@ const router = express.Router();
 
 
 router.post('/auth/register', register);
-router.post('/auth/login', authMiddleware ,validation.login, login);
-router.post('auth/logout', authMiddleware,  logout);
-router.post('/candidates/create', authMiddleware, createCandidate);
-router.get('/candidates', authMiddleware,  getCandidates);
+router.post('/auth/login' ,validation.login, login);
+router.post('/auth/logout',logout);
+router.post('/candidates/create',  createCandidate);
+router.get('/candidates',  getCandidates);
 router.get('/candidates/:candidateId', authMiddleware, getCandidateById);
 router.put('/candidates/:candidateId', authMiddleware, moveToEmployee);
 router.get('/employees', authMiddleware,  getEmployees);

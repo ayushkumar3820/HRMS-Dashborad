@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './logout.css';
+import { useNavigate } from 'react-router-dom';
+
 
 const Logout1 = () => {
   const [showLogout, setShowLogout] = useState(true);
+
+  const navigate = useNavigate()
 
   const handleLogout = async () => {
     try {
       console.log("Logging out...");
       await axios.post('http://localhost:5000/api/auth/logout');
       console.log("Logout successful");
+      navigate('/')
+      
       setShowLogout(false);
       // Optionally, you can redirect the user to the login page or home page
       // window.location.href = '/login';

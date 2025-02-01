@@ -1,31 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Select,
-  MenuItem,
-  Button,
-  TextField,
-  Box,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  FormControlLabel,
-  Checkbox,
-  DialogContentText,
-  Popper,
-  Grow,
-  ClickAwayListener,
-  MenuList,
-} from '@mui/material';
+import * as material from '@mui/material';
 import { Delete as DeleteIcon, MoreVert as MoreVertIcon } from '@mui/icons-material';
 
 const statusOptions = ['Scheduled', 'Ongoing', 'Selected', 'Rejected'];
@@ -45,7 +20,7 @@ const CandidateTable = () => {
     phoneNumber: '',
     position: '',
     experience: '',
-    resume: '',
+    resumeUrl: '',
     declaration: false,
   });
   const [anchorEl, setAnchorEl] = useState(null);
@@ -56,9 +31,9 @@ const CandidateTable = () => {
 
   const fetchCandidates = async () => {
     try {
-      const response = await axios.get('/api/candidates');
-      if (Array.isArray(response.data)) {
-        setCandidates(response.data);
+      const response = await axios.get('http://localhost:5000/api/candidates');
+      if (response.data && Array.isArray(response.data.candidates)) {
+        setCandidates(response.data.candidates);
       } else {
         setCandidates([]);
       }
@@ -87,7 +62,7 @@ const CandidateTable = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/api/candidates/${selectedCandidate.id}`);
+      await axios.delete(`/api/candidates/${selectedCandidate._id}`);
       fetchCandidates();
       setIsDeleteModalOpen(false);
       setSelectedCandidate(null);
@@ -121,20 +96,31 @@ const CandidateTable = () => {
 
   const handleAddCandidateSave = async () => {
     try {
-      await axios.post('/api/candidates/create', newCandidate);
-      fetchCandidates();
-      setIsAddCandidateModalOpen(false);
-      setNewCandidate({
-        fullName: '',
-        email: '',
-        phoneNumber: '',
-        position: '',
-        experience: '',
-        resume: '',
-        declaration: false,
+      const response = await axios.post('http://localhost:5000/api/candidates/create', newCandidate, {
+        headers: { 'Content-Type': 'application/json' },
       });
+
+      if (response.status === 201) {
+        console.log('Candidate added successfully:', response.data);
+        fetchCandidates(); // Refresh list after adding
+        setIsAddCandidateModalOpen(false);
+        setNewCandidate({
+          fullName: '',
+          email: '',
+          phoneNumber: '',
+          position: '',
+          experience: '',
+          resumeUrl: '',
+        });
+      } else {
+        console.error('Unexpected response:', response);
+      }
     } catch (error) {
-      console.error('Error adding candidate:', error);
+      if (error.response) {
+        console.error('API Error:', error.response.data);
+      } else {
+        console.error('Network Error:', error.message);
+      }
     }
   };
 
@@ -154,8 +140,8 @@ const CandidateTable = () => {
 
   const filteredCandidates = candidates.filter((candidate) => {
     const statusMatch = filterStatus ? candidate.status === filterStatus : true;
-    const positionMatch = positionStatus ? candidate.department === positionStatus : true;
-    const searchMatch = candidate.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const positionMatch = positionStatus ? candidate.position === positionStatus : true;
+    const searchMatch = candidate.fullName ? candidate.fullName.toLowerCase().includes(searchQuery.toLowerCase()) : false;
     return statusMatch && positionMatch && searchMatch;
   });
 
@@ -163,10 +149,10 @@ const CandidateTable = () => {
   const id = openMenu ? 'simple-popper' : undefined;
 
   return (
-    <Box sx={{ padding: '20px', backgroundColor: '#f4f4f4', borderRadius: '8px' }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Box display="flex" gap={2}>
-          <Select
+    <material.Box sx={{ padding: '20px', backgroundColor: '#f4f4f4', borderRadius: '8px' }}>
+      <material.Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <material.Box display="flex" gap={2}>
+          <material.Select
             value={filterStatus}
             onChange={handleFilterStatus}
             displayEmpty
@@ -183,16 +169,16 @@ const CandidateTable = () => {
               },
             }}
           >
-            <MenuItem value="" disabled>
+            <material.MenuItem value="" disabled>
               <em>Status</em>
-            </MenuItem>
+            </material.MenuItem>
             {statusOptions.map((status) => (
-              <MenuItem key={status} value={status}>
+              <material.MenuItem key={status} value={status}>
                 {status}
-              </MenuItem>
+              </material.MenuItem>
             ))}
-          </Select>
-          <Select
+          </material.Select>
+          <material.Select
             value={positionStatus}
             onChange={handlePositionStatus}
             displayEmpty
@@ -209,18 +195,18 @@ const CandidateTable = () => {
               },
             }}
           >
-            <MenuItem value="" disabled>
+            <material.MenuItem value="" disabled>
               <em>Position</em>
-            </MenuItem>
+            </material.MenuItem>
             {positionOptions.map((position) => (
-              <MenuItem key={position} value={position}>
+              <material.MenuItem key={position} value={position}>
                 {position}
-              </MenuItem>
+              </material.MenuItem>
             ))}
-          </Select>
-        </Box>
-        <Box display="flex" alignItems="center" gap={2}>
-          <TextField
+          </material.Select>
+        </material.Box>
+        <material.Box display="flex" alignItems="center" gap={2}>
+          <material.TextField
             placeholder="Search"
             value={searchQuery}
             onChange={handleSearch}
@@ -235,7 +221,7 @@ const CandidateTable = () => {
               },
             }}
           />
-          <Button
+          <material.Button
             variant="contained"
             color="primary"
             onClick={handleAddCandidateOpen}
@@ -249,39 +235,39 @@ const CandidateTable = () => {
             }}
           >
             Add Candidate
-          </Button>
-        </Box>
-      </Box>
+          </material.Button>
+        </material.Box>
+      </material.Box>
 
-      <TableContainer component={Paper} sx={{ borderRadius: '8px', overflow: 'hidden' }}>
-        <Table sx={{ minWidth: 650 }} aria-label="attendance table">
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Profile</TableCell>
-              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Employee Name</TableCell>
-              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Position</TableCell>
-              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Department</TableCell>
-              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Task</TableCell>
-              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Status</TableCell>
-              <TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
+      <material.TableContainer component={material.Paper} sx={{ borderRadius: '8px', overflow: 'hidden' }}>
+        <material.Table sx={{ minWidth: 650 }} aria-label="attendance table">
+          <material.TableHead>
+            <material.TableRow>
+              <material.TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Profile</material.TableCell>
+              <material.TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Employee Name</material.TableCell>
+              <material.TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Position</material.TableCell>
+              <material.TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Department</material.TableCell>
+              <material.TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Task</material.TableCell>
+              <material.TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Status</material.TableCell>
+              <material.TableCell sx={{ backgroundColor: '#6A1B9A', color: '#fff', fontWeight: 'bold', padding: '8px 16px' }}>Action</material.TableCell>
+            </material.TableRow>
+          </material.TableHead>
+          <material.TableBody>
             {filteredCandidates.map((candidate) => (
-              <TableRow key={candidate.id}>
-                <TableCell sx={{ padding: '8px 16px' }}>
+              <material.TableRow key={candidate._id}>
+                <material.TableCell sx={{ padding: '8px 16px' }}>
                   <img
                     src={candidate.avatar}
-                    alt={candidate.name}
+                    alt={candidate.fullName}
                     className="w-8 h-8 rounded-full"
                   />
-                </TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>{candidate.name}</TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>{candidate.position}</TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>{candidate.department}</TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>{candidate.task}</TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>
-                  <Select
+                </material.TableCell>
+                <material.TableCell sx={{ padding: '8px 16px' }}>{candidate.fullName}</material.TableCell>
+                <material.TableCell sx={{ padding: '8px 16px' }}>{candidate.position}</material.TableCell>
+                <material.TableCell sx={{ padding: '8px 16px' }}>{candidate.department}</material.TableCell>
+                <material.TableCell sx={{ padding: '8px 16px' }}>{candidate.task}</material.TableCell>
+                <material.TableCell sx={{ padding: '8px 16px' }}>
+                  <material.Select
                     value={candidate.status}
                     onChange={(event) => {
                       // Handle status change
@@ -299,7 +285,7 @@ const CandidateTable = () => {
                     }}
                   >
                     {statusOptions.map((status) => (
-                      <MenuItem
+                      <material.MenuItem
                         key={status}
                         value={status}
                         sx={{
@@ -308,12 +294,12 @@ const CandidateTable = () => {
                         }}
                       >
                         {status}
-                      </MenuItem>
+                      </material.MenuItem>
                     ))}
-                  </Select>
-                </TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>
-                  <IconButton
+                  </material.Select>
+                </material.TableCell>
+                <material.TableCell sx={{ padding: '8px 16px' }}>
+                  <material.IconButton
                     color="primary"
                     aria-label="more options"
                     onClick={(event) => handleToggle(event, candidate)}
@@ -327,54 +313,54 @@ const CandidateTable = () => {
                     }}
                   >
                     <MoreVertIcon />
-                  </IconButton>
-                  <Popper open={openMenu} anchorEl={anchorEl} role={undefined} transition disablePortal>
+                  </material.IconButton>
+                  <material.Popper open={openMenu} anchorEl={anchorEl} role={undefined} transition disablePortal>
                     {({ TransitionProps, placement }) => (
-                      <Grow
+                      <material.Grow
                         {...TransitionProps}
                         style={{
                           transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
                         }}
                       >
-                        <Paper>
-                          <ClickAwayListener onClickAway={handleClose}>
-                            <MenuList autoFocusItem={openMenu} id={id} onKeyDown={(e) => handleClose(e)}>
-                              <MenuItem onClick={handleDownloadResume}>Download Resume</MenuItem>
-                              <MenuItem onClick={() => handleDeleteConfirmation(candidate)}>Delete Candidate</MenuItem>
-                            </MenuList>
-                          </ClickAwayListener>
-                        </Paper>
-                      </Grow>
+                        <material.Paper>
+                          <material.ClickAwayListener onClickAway={handleClose}>
+                            <material.MenuList autoFocusItem={openMenu} id={id} onKeyDown={(e) => handleClose(e)}>
+                              <material.MenuItem onClick={handleDownloadResume}>Download Resume</material.MenuItem>
+                              <material.MenuItem onClick={() => handleDeleteConfirmation(candidate)}>Delete Candidate</material.MenuItem>
+                            </material.MenuList>
+                          </material.ClickAwayListener>
+                        </material.Paper>
+                      </material.Grow>
                     )}
-                  </Popper>
-                </TableCell>
-              </TableRow>
+                  </material.Popper>
+                </material.TableCell>
+              </material.TableRow>
             ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+          </material.TableBody>
+        </material.Table>
+      </material.TableContainer>
 
       {/* Delete Confirmation Modal */}
-      <Dialog open={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
-        <DialogTitle>Delete Candidate</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
+      <material.Dialog open={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
+        <material.DialogTitle>Delete Candidate</material.DialogTitle>
+        <material.DialogContent>
+          <material.DialogContentText>
             Are you sure you want to delete this candidate?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button>
-          <Button onClick={handleDelete} color="error" variant="contained">
+          </material.DialogContentText>
+        </material.DialogContent>
+        <material.DialogActions>
+          <material.Button onClick={() => setIsDeleteModalOpen(false)}>Cancel</material.Button>
+          <material.Button onClick={handleDelete} color="error" variant="contained">
             Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+          </material.Button>
+        </material.DialogActions>
+      </material.Dialog>
 
       {/* Add Candidate Modal */}
-      <Dialog open={isAddCandidateModalOpen} onClose={handleAddCandidateClose}>
-        <DialogTitle>Add New Candidate</DialogTitle>
-        <DialogContent>
-          <TextField
+      <material.Dialog open={isAddCandidateModalOpen} onClose={handleAddCandidateClose}>
+        <material.DialogTitle>Add New Candidate</material.DialogTitle>
+        <material.DialogContent>
+          <material.TextField
             label="Full Name*"
             name="fullName"
             value={newCandidate.fullName}
@@ -382,7 +368,7 @@ const CandidateTable = () => {
             fullWidth
             margin="normal"
           />
-          <TextField
+          <material.TextField
             label="Email Address*"
             name="email"
             value={newCandidate.email}
@@ -390,7 +376,7 @@ const CandidateTable = () => {
             fullWidth
             margin="normal"
           />
-          <TextField
+          <material.TextField
             label="Phone Number*"
             name="phoneNumber"
             value={newCandidate.phoneNumber}
@@ -398,7 +384,7 @@ const CandidateTable = () => {
             fullWidth
             margin="normal"
           />
-          <TextField
+          <material.TextField
             label="Position*"
             name="position"
             value={newCandidate.position}
@@ -406,7 +392,7 @@ const CandidateTable = () => {
             fullWidth
             margin="normal"
           />
-          <TextField
+          <material.TextField
             label="Experience*"
             name="experience"
             value={newCandidate.experience}
@@ -414,17 +400,17 @@ const CandidateTable = () => {
             fullWidth
             margin="normal"
           />
-          <TextField
+          <material.TextField
             label="Resume*"
-            name="resume"
-            value={newCandidate.resume}
+            name="resumeUrl"
+            value={newCandidate.resumeUrl}
             onChange={handleAddCandidateChange}
             fullWidth
             margin="normal"
           />
-          <FormControlLabel
+          <material.FormControlLabel
             control={
-              <Checkbox
+              <material.Checkbox
                 checked={newCandidate.declaration}
                 onChange={handleAddCandidateDeclarationChange}
                 color="primary"
@@ -432,15 +418,15 @@ const CandidateTable = () => {
             }
             label="I hereby declare that the above information is true to the best of my knowledge and belief"
           />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleAddCandidateClose}>Cancel</Button>
-          <Button onClick={handleAddCandidateSave} variant="contained" color="primary">
+        </material.DialogContent>
+        <material.DialogActions>
+          <material.Button onClick={handleAddCandidateClose}>Cancel</material.Button>
+          <material.Button onClick={handleAddCandidateSave} variant="contained" color="primary">
             Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+          </material.Button>
+        </material.DialogActions>
+      </material.Dialog>
+    </material.Box>
   );
 };
 

@@ -36,7 +36,7 @@ const getCandidates = async (req, res) => {
   }
 };
 
-const moveToEmployee = async (req, res) => {
+const moveToEmployee =  async (req, res) => {
   try {
     const { candidateId } = req.params;
     const candidate = await Candidate.findById(candidateId);
