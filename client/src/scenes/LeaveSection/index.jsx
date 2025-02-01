@@ -7,14 +7,6 @@ function LeaveSection() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [formData, setFormData] = useState({
-    employeeId: '',
-    employeeName: '',
-    designation: '',
-    leaveDate: '',
-    reason: '',
-  });
-
 
   const dummyLeaves = [
     {
@@ -25,6 +17,7 @@ function LeaveSection() {
       status: 'Approved',
       designation: 'Senior Backend Developer'
     },
+    // Add more dummy data as needed
   ];
 
   const filteredLeaves = dummyLeaves.filter(leave => {
@@ -33,55 +26,13 @@ function LeaveSection() {
     return matchesSearch && matchesStatus;
   });
 
-  const getDaysInMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-  const getFirstDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const getDaysInMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!formData.employeeId || !formData.employeeName || !formData.designation || !formData.leaveDate || !formData.reason) {
-      alert("Please fill all required fields");
-      return;
-    }
-  
-    const leaveData = {
-      employeeId: formData.employeeId,
-      startDate: formData.leaveDate,
-      endDate: formData.leaveDate,
-      reason: formData.reason
-    };
-  
-    // Retrieve idToken from Local Storage
-    const idToken = localStorage.getItem("idToken");
-  
-    try {
-      const response = await fetch("http://localhost:5000/api/leaves", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${idToken}`
-        },
-        body: JSON.stringify(leaveData),
-      });
-  
-      const result = await response.json();
-      if (response.ok) {
-        alert("Leave applied successfully!");
-        setShowModal(false);
-        setFormData({ employeeId: '', employeeName: '', designation: '', leaveDate: '', reason: '' });
-      } else {
-        alert("Error: " + result.message);
-      }
-    } catch (error) {
-      console.error("Error applying leave:", error);
-      alert("Failed to apply leave.");
-    }
+  const getFirstDayOfMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
   };
-  
 
   return (
     <div className="container">
@@ -89,7 +40,11 @@ function LeaveSection() {
         <div className="header">
           <div className="filters">
             <div className="filter-select">
-              <select className="select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+              <select
+                className="select"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
                 <option value="All">Status</option>
                 <option value="Approved">Approved</option>
                 <option value="Pending">Pending</option>
@@ -108,7 +63,12 @@ function LeaveSection() {
               <Search className="search-icon" />
             </div>
           </div>
-          <button onClick={() => setShowModal(true)} className="add-leave-btn">Add Leave</button>
+          <button
+            onClick={() => setShowModal(true)}
+            className="add-leave-btn"
+          >
+            Add Leave
+          </button>
         </div>
 
         <div className="grid">
@@ -119,7 +79,11 @@ function LeaveSection() {
                 {filteredLeaves.map((leave) => (
                   <div key={leave.id} className="leave-item">
                     <div className="leave-details">
-                      <img src={`https://source.unsplash.com/random/40x40?face&${leave.id}`} alt={leave.name} className="avatar" />
+                      <img
+                        src={`https://source.unsplash.com/random/40x40?face&${leave.id}`}
+                        alt={leave.name}
+                        className="avatar"
+                      />
                       <div>
                         <h3 className="leave-name">{leave.name}</h3>
                         <p className="leave-designation">{leave.designation}</p>
@@ -127,7 +91,9 @@ function LeaveSection() {
                     </div>
                     <div className="leave-date">{leave.date}</div>
                     <div className="leave-reason">{leave.reason}</div>
-                    <div className={`leave-status ${leave.status.toLowerCase()}`}>{leave.status}</div>
+                    <div className={`leave-status ${leave.status.toLowerCase()}`}>
+                      {leave.status}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -203,62 +169,45 @@ function LeaveSection() {
                 <X className="icon" />
               </button>
             </div>
-            <form className="modal-form" onSubmit={handleSubmit}>
+            <form className="modal-form">
               <div className="form-group">
                 <input
                   type="text"
-                  name="employeeId"
-                  placeholder="Employee ID*"
+                  placeholder="Search Employee Name"
                   className="input"
-                  value={formData.employeeId}
-                  onChange={handleChange}
-                  required
                 />
               </div>
               <div className="form-group">
                 <input
                   type="text"
-                  name="employeeName"
-                  placeholder="Employee Name*"
-                  className="input"
-                  value={formData.employeeName}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="text"
-                  name="designation"
                   placeholder="Designation*"
                   className="input"
-                  value={formData.designation}
-                  onChange={handleChange}
-                  required
                 />
               </div>
               <div className="form-group">
                 <input
                   type="date"
-                  name="leaveDate"
+                  placeholder="Leave Date*"
                   className="input"
-                  value={formData.leaveDate}
-                  onChange={handleChange}
-                  required
                 />
               </div>
               <div className="form-group">
                 <textarea
-                  name="reason"
                   placeholder="Reason*"
                   className="textarea"
                   rows={3}
-                  value={formData.reason}
-                  onChange={handleChange}
-                  required
                 />
               </div>
-              <button type="submit" className="save-btn">Save</button>
+              <div className="form-group upload-section">
+                <Upload className="upload-icon" />
+                <p className="upload-text">Upload Documents</p>
+              </div>
+              <button
+                type="submit"
+                className="save-btn"
+              >
+                Save
+              </button>
             </form>
           </div>
         </div>
