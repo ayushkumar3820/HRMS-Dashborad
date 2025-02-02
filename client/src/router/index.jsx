@@ -16,7 +16,7 @@ const Router = reactRouterDom.createBrowserRouter(
         <reactRouterDom.Route path="products" element={<scenes.Products />} />
         <reactRouterDom.Route path="customers" element={<scenes.Customers />} />
         <reactRouterDom.Route path="transactions" element={<scenes.Transactions />} />
-       
+
         <reactRouterDom.Route path="overview" element={<scenes.Overview />} />
         <reactRouterDom.Route path="AttendanceDashboard" element={<scenes.AttendanceDashboard />} />
         <reactRouterDom.Route path="LeaveSection" element={<scenes.LeaveSection />} />

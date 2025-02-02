@@ -1,21 +1,36 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './logout.css';
 
 const Logout1 = () => {
   const [showLogout, setShowLogout] = useState(true);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleLogout = async () => {
     try {
       console.log("Logging out...");
       await axios.post('http://localhost:5000/api/auth/logout');
       console.log("Logout successful");
+      
+      // Clear any stored authentication data (if you're using any)
+      localStorage.removeItem('token'); // If you're using JWT
+      sessionStorage.removeItem('token'); // If you're using session storage
+      
       setShowLogout(false);
-      // Optionally, you can redirect the user to the login page or home page
-      // window.location.href = '/login';
+      
+      // Redirect to login page using navigate
+      navigate('/login');
+      
     } catch (error) {
       console.error("Error logging out:", error);
     }
+  };
+
+  const handleCancel = () => {
+    setShowLogout(false);
+    // Optionally navigate back to the previous page
+    navigate(-1);
   };
 
   return (
@@ -32,7 +47,7 @@ const Logout1 = () => {
 
               <div className="button-group">
                 <button
-                  onClick={() => setShowLogout(false)}
+                  onClick={handleCancel}
                   className="cancel-button"
                 >
                   Cancel

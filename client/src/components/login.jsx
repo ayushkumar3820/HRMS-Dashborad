@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios"; // Import Axios
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true); // Toggle state
@@ -12,16 +13,18 @@ export const LoginPage = () => {
   const [fullName, setFullName] = useState(""); // For Signup only
   const [loading, setLoading] = useState(false); // Loading state for button
 
+  const navigate = useNavigate(); // Initialize useNavigate
+
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
     setLoading(true);
 
-    const apiUrl = isLogin ? "/api/auth/login" : "/api/auth/register"; // Set the URL based on login or signup
+    const apiUrl = isLogin ? "http://localhost:5000/api/auth/login" : "http://localhost:5000/api/auth/register"; // Set the URL based on login or signup
     const payload = isLogin
       ? { email, password }
-      : { fullName, email, password,confirmPassword}; // Adjust payload for Signup
+      : { fullName, email, password, confirmPassword, role: "user" }; // Adjust payload for Signup
 
     axios
       .post(apiUrl, payload)
@@ -29,6 +32,13 @@ export const LoginPage = () => {
         if (response.status === 200 || response.status === 201) {
           // Handle success (e.g., redirect to dashboard or show success message)
           console.log("Success:", response.data);
+          if (isLogin) {
+            navigate("/dashboard"); // Redirect to dashboard only on login
+          } else {
+            // Show a success message or any other action for registration
+            alert("Registration successful! Please log in.");
+            setIsLogin(true); // Switch to login form
+          }
         }
       })
       .catch((error) => {
