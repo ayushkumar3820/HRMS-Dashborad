@@ -1,27 +1,59 @@
-import React, { useState } from 'react';
-import { Calendar as CalendarIcon, Search, Filter, X, Upload, ChevronLeft, ChevronRight } from 'lucide-react';
-import './LeaveSection.css'; // Import the CSS file for styling
+import React, { useState, useEffect } from 'react';
+import { Search, Filter, X, Upload, ChevronLeft, ChevronRight, File } from 'lucide-react';
+import axios from 'axios';
+import './LeaveSection.css';
 
 function LeaveSection() {
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [leaves, setLeaves] = useState([]);
 
-  const dummyLeaves = [
-    {
-      id: '1',
-      name: 'Cody Fisher',
-      date: '2024-08-09',
-      reason: 'Visiting House',
-      status: 'Approved',
-      designation: 'Senior Backend Developer'
-    },
-    // Add more dummy data as needed
-  ];
+  const API_URL = 'http://localhost:5000/api';
 
-  const filteredLeaves = dummyLeaves.filter(leave => {
-    const matchesSearch = leave.name.toLowerCase().includes(searchTerm.toLowerCase());
+  useEffect(() => {
+    const fetchLeaves = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/leaves`);
+        setLeaves(response.data.leaves);
+      } catch (error) {
+        console.error('Error fetching leaves:', error);
+      }
+    };
+
+    fetchLeaves();
+  }, []);
+
+  const handleAddLeave = async (leaveData) => {
+    try {
+      const response = await axios.post(`${API_URL}/leaves`, leaveData, {
+        headers: {
+          Authorization: 'sd' // Add your authorization token here
+        }
+      });
+      setLeaves([...leaves, response.data.leave]);
+      setShowModal(false);
+    } catch (error) {
+      console.error('Error posting leave:', error);
+    }
+  };
+
+  const handleUpdateLeave = async (leaveId, leaveData) => {
+    try {
+      const response = await axios.put(`${API_URL}/leaves/${leaveId}`, leaveData, {
+        headers: {
+          Authorization: 'sd' // Add your authorization token here
+        }
+      });
+      setLeaves(leaves.map(leave => leave._id === leaveId ? response.data.leave : leave));
+    } catch (error) {
+      console.error('Error updating leave:', error);
+    }
+  };
+
+  const filteredLeaves = leaves.filter(leave => {
+    const matchesSearch = leave.employeeId.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'All' || leave.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -50,9 +82,10 @@ function LeaveSection() {
                 <option value="Pending">Pending</option>
                 <option value="Rejected">Rejected</option>
               </select>
-              <Filter className="filter-icon" />
+              <Filter className="filter-icon" size={16} />
             </div>
             <div className="search-input">
+              <Search className="search-icon" size={16} />
               <input
                 type="text"
                 placeholder="Search"
@@ -60,7 +93,6 @@ function LeaveSection() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <Search className="search-icon" />
             </div>
           </div>
           <button
@@ -72,89 +104,95 @@ function LeaveSection() {
         </div>
 
         <div className="grid">
-          <div className="applied-leaves">
-            <div className="card">
-              <h2 className="card-title">Applied Leaves</h2>
-              <div className="leaves-list">
-                {filteredLeaves.map((leave) => (
-                  <div key={leave.id} className="leave-item">
-                    <div className="leave-details">
-                      <img
-                        src={`https://source.unsplash.com/random/40x40?face&${leave.id}`}
-                        alt={leave.name}
-                        className="avatar"
-                      />
-                      <div>
-                        <h3 className="leave-name">{leave.name}</h3>
-                        <p className="leave-designation">{leave.designation}</p>
-                      </div>
-                    </div>
-                    <div className="leave-date">{leave.date}</div>
-                    <div className="leave-reason">{leave.reason}</div>
-                    <div className={`leave-status ${leave.status.toLowerCase()}`}>
-                      {leave.status}
+          <div className="card">
+            <h2 className="card-title">Applied Leaves</h2>
+            <div className="leaves-list">
+              {filteredLeaves.map((leave) => (
+                <div key={leave._id} className="leave-item">
+                  <div className="leave-details">
+                    <img
+                      src="dashboard-image.jpg"
+                      alt={leave.employeeId.name}
+                      className="avatar"
+                    />
+                    <div>
+                      <h3 className="leave-name">{leave.employeeId.name}</h3>
+                      <p className="leave-designation">{leave.employeeId.designation}</p>
                     </div>
                   </div>
-                ))}
-              </div>
+                  <div className="leave-date">{new Date(leave.startDate).toLocaleDateString()}</div>
+                  <div className="leave-reason">{leave.reason}</div>
+                  <div className={`leave-status ${leave.status.toLowerCase()}`}>
+                    <select
+                      value={leave.status}
+                      onChange={(e) => handleUpdateLeave(leave._id, { ...leave, status: e.target.value })}
+                    >
+                      <option value="Approved">Approved</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Rejected">Rejected</option>
+                    </select>
+                  </div>
+                  <File className="docs-icon" size={16} />
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="leave-calendar">
-            <div className="card">
-              <h2 className="card-title">Leave Calendar</h2>
-              <div className="calendar-header">
-                <button onClick={() => setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() - 1)))}>
-                  <ChevronLeft className="icon" />
-                </button>
-                <h3 className="calendar-month">
-                  {currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}
-                </h3>
-                <button onClick={() => setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() + 1)))}>
-                  <ChevronRight className="icon" />
-                </button>
-              </div>
-              <div className="calendar-grid">
-                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day) => (
-                  <div key={day} className="calendar-day-label">
-                    {day}
-                  </div>
-                ))}
-                {[...Array(getFirstDayOfMonth(currentMonth))].map((_, i) => (
-                  <div key={`empty-${i}`} className="calendar-day-empty"></div>
-                ))}
-                {[...Array(getDaysInMonth(currentMonth))].map((_, i) => (
-                  <div
-                    key={i + 1}
-                    className={`calendar-day ${
-                      filteredLeaves.some(leave => new Date(leave.date).getDate() === i + 1)
-                        ? 'has-leave'
-                        : ''
-                    }`}
-                  >
-                    {i + 1}
-                  </div>
-                ))}
-              </div>
-              <div className="approved-leaves">
-                <h3>Approved Leaves</h3>
-                {filteredLeaves.map((leave) => (
-                  <div key={leave.id} className="approved-leave-item">
+          <div className="card">
+            <h2 className="card-title">Leave Calendar</h2>
+            <div className="calendar-header">
+              <button onClick={() => setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() - 1)))}>
+                <ChevronLeft size={20} />
+              </button>
+              <h3 className="calendar-month">
+                {currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}
+              </h3>
+              <button onClick={() => setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() + 1)))}>
+                <ChevronRight size={20} />
+              </button>
+            </div>
+            <div className="calendar-grid">
+              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day) => (
+                <div key={day} className="calendar-day-label">
+                  {day}
+                </div>
+              ))}
+              {[...Array(getFirstDayOfMonth(currentMonth))].map((_, i) => (
+                <div key={`empty-${i}`} className="calendar-day-empty"></div>
+              ))}
+              {[...Array(getDaysInMonth(currentMonth))].map((_, i) => (
+                <div
+                  key={i + 1}
+                  className={`calendar-day ${
+                    filteredLeaves.some(leave => new Date(leave.startDate).getDate() === i + 1)
+                      ? 'has-leave'
+                      : ''
+                  }`}
+                >
+                  {i + 1}
+                </div>
+              ))}
+            </div>
+            <div className="approved-leaves">
+              <h3>Approved Leaves</h3>
+              {filteredLeaves
+                .filter(leave => leave.status === 'Approved')
+                .map((leave) => (
+                  <div key={leave._id} className="approved-leave-item">
                     <div className="leave-details">
                       <img
-                        src={`https://source.unsplash.com/random/40x40?face&${leave.id}`}
-                        alt={leave.name}
+                        src="dashboard-image.jpg"
+                        alt={leave.employeeId.name}
                         className="avatar"
                       />
                       <div>
-                        <h3 className="leave-name">{leave.name}</h3>
-                        <p className="leave-designation">{leave.designation}</p>
+                        <h3 className="leave-name">{leave.employeeId.name}</h3>
+                        <p className="leave-designation">{leave.employeeId.designation}</p>
                       </div>
                     </div>
-                    <div className="leave-date">{leave.date}</div>
+                    <div className="leave-date">{new Date(leave.startDate).toLocaleDateString()}</div>
                   </div>
                 ))}
-              </div>
             </div>
           </div>
         </div>
@@ -166,13 +204,27 @@ function LeaveSection() {
             <div className="modal-header">
               <h2 className="modal-title">Add New Leave</h2>
               <button onClick={() => setShowModal(false)} className="close-btn">
-                <X className="icon" />
+                <X size={20} />
               </button>
             </div>
-            <form className="modal-form">
+            <form
+              className="modal-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = {
+                  employeeId: e.target.employeeName.value,
+                  startDate: e.target.leaveDate.value,
+                  endDate: e.target.leaveDate.value,
+                  reason: e.target.reason.value,
+                  status: 'Pending',
+                };
+                handleAddLeave(formData);
+              }}
+            >
               <div className="form-group">
                 <input
                   type="text"
+                  name="employeeName"
                   placeholder="Search Employee Name"
                   className="input"
                 />
@@ -187,25 +239,24 @@ function LeaveSection() {
               <div className="form-group">
                 <input
                   type="date"
+                  name="leaveDate"
                   placeholder="Leave Date*"
                   className="input"
                 />
               </div>
               <div className="form-group">
                 <textarea
+                  name="reason"
                   placeholder="Reason*"
-                  className="textarea"
+                  className="input"
                   rows={3}
                 />
               </div>
-              <div className="form-group upload-section">
-                <Upload className="upload-icon" />
+              <div className="upload-section">
+                <Upload className="upload-icon" size={20} />
                 <p className="upload-text">Upload Documents</p>
               </div>
-              <button
-                type="submit"
-                className="save-btn"
-              >
+              <button type="submit" className="save-btn">
                 Save
               </button>
             </form>

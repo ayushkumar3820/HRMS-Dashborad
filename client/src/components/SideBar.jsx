@@ -1,15 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useTheme } from "@emotion/react";
-import { Avatar, Box, Divider, Typography, TextField } from "@mui/material";
+import { Box, Divider, Typography, TextField, InputAdornment } from "@mui/material";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import { SideItem } from "../components";
-import { DashboardOutlined, SettingsOutlined, Search as SearchIcon } from "@mui/icons-material";
+import { Search as SearchIcon } from "@mui/icons-material";
 import { sideItems } from "../constants/index";
-import profileImage from "../assets/images/profile.jpeg";
 import logo from "../assets/images/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { setToggled } from "../state/global/GlobalSlice";
-import { LoginPage } from "../components/login";
 
 const SideBar = ({ user }) => {
   const collapsed = useSelector((state) => state.global.collapsed);
@@ -25,16 +23,17 @@ const SideBar = ({ user }) => {
       }}
       toggled={toggled}
       breakPoint="942px"
-      backgroundColor={theme.palette.background.alt}
+      backgroundColor="#fff"
       rootStyles={{
-        color: theme.palette.secondary[200],
+        color: "#6B7280",
         border: 0,
         height: "100%",
         boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        gap: "2.5rem",
+        gap: "2rem",
+        boxShadow: "1px 0px 10px rgba(0, 0, 0, 0.05)",
       }}
     >
       <Box
@@ -44,8 +43,8 @@ const SideBar = ({ user }) => {
           boxSizing: "border-box",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          gap: "2.25rem",
+          gap: "1.5rem",
+          padding: "1rem",
         }}
       >
         {/* Top Section */}
@@ -57,28 +56,39 @@ const SideBar = ({ user }) => {
           >
             <MenuItem
               rootStyles={{
-                marginTop: "10px",
-                marginBottom: "20px",
+                marginBottom: "1rem",
+                padding: "0.5rem",
               }}
             >
               <Box
                 display="flex"
                 alignItems="center"
-                gap="12px"
-                sx={{ transition: ".3s ease" }}
+                gap="0.75rem"
               >
-                <img
-                  style={{ width: "30px", height: "30px", borderRadius: "8px" }}
-                  src={logo}
-                  alt="Logo"
-                />
+                <Box
+                  sx={{
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "4px",
+                    backgroundColor: "#6366F1",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    style={{ width: "24px", height: "24px" }}
+                    src={logo}
+                    alt="Logo"
+                  />
+                </Box>
                 {!collapsed && (
                   <Typography
-                    variant="h4"
-                    fontWeight="bold"
-                    textTransform="capitalize"
+                    variant="h6"
+                    fontWeight="600"
+                    sx={{ color: "#111827" }}
                   >
-                    Logo
+                    LOGO
                   </Typography>
                 )}
               </Box>
@@ -87,173 +97,207 @@ const SideBar = ({ user }) => {
 
           {/* Search Bar */}
           {!collapsed && (
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                padding: "0 1rem",
-                marginBottom: "1rem",
-              }}
-            >
-              <SearchIcon sx={{ color: theme.palette.secondary[300] }} />
+            <Box sx={{ padding: "0.5rem" }}>
               <TextField
+                fullWidth
                 placeholder="Search"
                 variant="outlined"
                 size="small"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon sx={{ color: "#9CA3AF", fontSize: "1.25rem" }} />
+                    </InputAdornment>
+                  ),
+                }}
                 sx={{
-                  flex: 1,
-                  marginLeft: "0.5rem",
                   "& .MuiOutlinedInput-root": {
+                    backgroundColor: "#F9FAFB",
+                    borderRadius: "8px",
                     "& fieldset": {
-                      borderColor: theme.palette.secondary[300],
+                      borderColor: "#E5E7EB",
                     },
                     "&:hover fieldset": {
-                      borderColor: theme.palette.primary[600],
+                      borderColor: "#6366F1",
                     },
                     "&.Mui-focused fieldset": {
-                      borderColor: theme.palette.primary[600],
+                      borderColor: "#6366F1",
                     },
                   },
                   "& .MuiInputBase-input": {
-                    color: theme.palette.secondary[200],
+                    color: "#111827",
+                    fontSize: "0.875rem",
                   },
                 }}
               />
             </Box>
           )}
 
-          <Menu
-            menuItemStyles={{
-              button: {
-                ":hover": {
-                  color: theme.palette.primary[600],
-                  background: theme.palette.secondary[300],
-                  transition: ".4s ease",
+          {/* Menu Sections */}
+          <Box sx={{ marginTop: "1rem" }}>
+            {/* Recruitment Section */}
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                padding: "0.5rem", 
+                color: "#9CA3AF",
+                fontSize: "0.75rem",
+                fontWeight: "500",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em"
+              }}
+            >
+              {!collapsed ? "Recruitment" : " "}
+            </Typography>
+            <Menu
+              menuItemStyles={{
+                button: {
+                  padding: "0.5rem",
+                  borderRadius: "8px",
+                  color: "#6B7280",
+                  fontSize: "0.875rem",
+                  fontWeight: "500",
+                  ":hover": {
+                    color: "#6366F1",
+                    backgroundColor: "#F3F4F6",
+                  },
                 },
-              },
-            }}
-          >
-            
-          </Menu>
+              }}
+            >
+              {sideItems.client.map((item, index) => (
+                <SideItem
+                  key={index}
+                  title={item.title}
+                  icon={item.icon}
+                  path={item.path}
+                />
+              ))}
+            </Menu>
 
-          {/* Client Facing */}
-          <Typography variant="h6" sx={{ m: "2.25rem 0 1rem 20px" }}>
-            {!collapsed ? "Recruitment" : " "}
-          </Typography>
-          <Menu
-            menuItemStyles={{
-              button: {
-                ":hover": {
-                  color: theme.palette.primary[600],
-                  background: theme.palette.secondary[300],
-                  transition: ".4s ease",
+            {/* Organization Section */}
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                padding: "0.5rem", 
+                marginTop: "1rem",
+                color: "#9CA3AF",
+                fontSize: "0.75rem",
+                fontWeight: "500",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em"
+              }}
+            >
+              {!collapsed ? "Organization" : " "}
+            </Typography>
+            <Menu
+              menuItemStyles={{
+                button: {
+                  padding: "0.5rem",
+                  borderRadius: "8px",
+                  color: "#6B7280",
+                  fontSize: "0.875rem",
+                  fontWeight: "500",
+                  ":hover": {
+                    color: "#6366F1",
+                    backgroundColor: "#F3F4F6",
+                  },
                 },
-              },
-            }}
-          >
-            {sideItems.client.map((item, index) => (
-              <SideItem
-                key={index}
-                title={item.title}
-                icon={item.icon}
-                path={item.path}
-              />
-            ))}
-          </Menu>
+              }}
+            >
+              {sideItems.sales.map((item, index) => (
+                <SideItem
+                  key={index}
+                  title={item.title}
+                  icon={item.icon}
+                  path={item.path}
+                />
+              ))}
+            </Menu>
 
-          {/* Sales */}
-          <Typography variant="h6" sx={{ m: "2.25rem 0 1rem 20px" }}>
-            {!collapsed ? "Organization" : " "}
-          </Typography>
-          <Menu
-            menuItemStyles={{
-              button: {
-                ":hover": {
-                  color: theme.palette.primary[600],
-                  background: theme.palette.secondary[300],
-                  transition: ".4s ease",
+            {/* Others Section */}
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                padding: "0.5rem", 
+                marginTop: "1rem",
+                color: "#9CA3AF",
+                fontSize: "0.75rem",
+                fontWeight: "500",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em"
+              }}
+            >
+              {!collapsed ? "Others" : " "}
+            </Typography>
+            <Menu
+              menuItemStyles={{
+                button: {
+                  padding: "0.5rem",
+                  borderRadius: "8px",
+                  color: "#6B7280",
+                  fontSize: "0.875rem",
+                  fontWeight: "500",
+                  ":hover": {
+                    color: "#6366F1",
+                    backgroundColor: "#F3F4F6",
+                  },
                 },
-              },
-            }}
-          >
-            {sideItems.sales.map((item, index) => (
-              <SideItem
-                key={index}
-                title={item.title}
-                icon={item.icon}
-                path={item.path}
-              />
-            ))}
-          </Menu>
-          {/* Management */}
-          <Typography variant="h6" sx={{ m: "2.25rem 0 1rem 20px" }}>
-            {!collapsed ? "Other" : " "}
-          </Typography>
-          <Menu
-            menuItemStyles={{
-              button: {
-                ":hover": {
-                  color: theme.palette.primary[600],
-                  background: theme.palette.secondary[300],
-                  transition: ".4s ease",
-                },
-              },
-            }}
-          >
-            {sideItems.management.map((item, index) => (
-              <SideItem
-                key={index}
-                title={item.title}
-                icon={item.icon}
-                path={item.path}
-              />
-            ))}
-          </Menu>
+              }}
+            >
+              {sideItems.management.map((item, index) => (
+                <SideItem
+                  key={index}
+                  title={item.title}
+                  icon={item.icon}
+                  path={item.path}
+                />
+              ))}
+            </Menu>
+          </Box>
         </Box>
 
         {/* Bottom Section */}
-        <Menu
-          menuItemStyles={{
-            button: { ":hover": { background: "transparent" } },
-          }}
-        >
-          <Divider />
-          <MenuItem
-            rootStyles={{
-              paddingTop: "5px",
-              paddingBottom: "5px",
+        <Box sx={{ marginTop: "auto" }}>
+          <Divider sx={{ margin: "1rem 0" }} />
+          <Menu
+            menuItemStyles={{
+              button: { ":hover": { background: "transparent" } },
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-                width: "100%",
-              }}
-            >
-             
-
-              {!collapsed && (
-                <Box textAlign="left">
-                  <Typography
-                    fontWeight="bold"
-                    fontSize="0.9rem"
-                    sx={{ color: theme.palette.secondary[100] }}
-                  >
-                    {user.name}
-                  </Typography>
-                  <Typography
-                    fontSize="0.8rem"
-                    sx={{ color: theme.palette.secondary[200] }}
-                  >
-                    {user.occupation}
-                  </Typography>
-                </Box>
-              )}
-            </Box>
-          </MenuItem>
-        </Menu>
+            <MenuItem>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.75rem",
+                  padding: "0.25rem",
+                }}
+              >
+                {!collapsed && (
+                  <Box>
+                    <Typography
+                      sx={{
+                        color: "#111827",
+                        fontSize: "0.875rem",
+                        fontWeight: "600",
+                      }}
+                    >
+                      {user.name}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        color: "#6B7280",
+                        fontSize: "0.75rem",
+                      }}
+                    >
+                      {user.occupation}
+                    </Typography>
+                  </Box>
+                )}
+              </Box>
+            </MenuItem>
+          </Menu>
+        </Box>
       </Box>
     </Sidebar>
   );

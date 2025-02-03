@@ -43,35 +43,44 @@ const moveToEmployee = async (req, res) => {
     if (!candidate) {
       return res.status(404).json({ message: "Candidate not found" });
     }
+
+    // Ensure correct field mapping
     const newEmployee = new Employee({
       fullName: candidate.fullName,
       email: candidate.email,
-      phone: candidate.phoneNumber,
+      phone: candidate.phoneNumber, // ✅ Fix: Ensure correct field mapping
       role: "Employee",
     });
+
     await newEmployee.save();
     await Candidate.findByIdAndDelete(candidateId);
-    res
-      .status(200)
-      .json({
-        message: "Candidate moved to employee successfully",
-        employee: newEmployee,
-      });
+
+    res.status(200).json({
+      message: "Candidate moved to employee successfully",
+      employee: newEmployee,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 const getCandidateById = async (req, res) => {
   try {
-    const candidateId = req.params.candidateId.trim();
+    const { candidateId } = req.params; // ✅ Fix: Remove `.trim()` to prevent potential errors
+    if (!mongoose.Types.ObjectId.isValid(candidateId)) {
+      return res.status(400).json({ message: "Invalid Candidate ID" });
+    }
+
     const candidate = await Candidate.findById(candidateId);
     if (!candidate) {
       return res.status(404).json({ message: "Candidate not found" });
     }
+
     res.status(200).json({ candidate });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 export { createCandidate, getCandidates, moveToEmployee, getCandidateById };

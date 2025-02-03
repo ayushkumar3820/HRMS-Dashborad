@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -22,65 +22,20 @@ import {
 } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, MoreVert as MoreVertIcon } from '@mui/icons-material';
 
-const employees = [
-  {
-    id: 1,
-    name: 'Jane Copper',
-    email: 'jane.copper@example.com',
-    phone: '(704) 555-0127',
-    position: 'Intern',
-    department: 'Designer',
-    dateOfJoining: '10/06/13',
-    avatar: '/api/placeholder/32/32',
-  },
-  {
-    id: 2,
-    name: 'Arlene McCoy',
-    email: 'arlene.mccoy@example.com',
-    phone: '(302) 555-0107',
-    position: 'Full Time',
-    department: 'Designer',
-    dateOfJoining: '11/07/16',
-    avatar: '/api/placeholder/32/32',
-  },
-  {
-    id: 3,
-    name: 'Cody Fisher',
-    email: 'deanna.curtis@example.com',
-    phone: '(252) 555-0126',
-    position: 'Senior',
-    department: 'Backend Development',
-    dateOfJoining: '08/15/17',
-    avatar: '/api/placeholder/32/32',
-  },
-  {
-    id: 4,
-    name: 'Janney Wilson',
-    email: 'janney.wilson@example.com',
-    phone: '(252) 555-0126',
-    position: 'Junior',
-    department: 'Backend Development',
-    dateOfJoining: '12/04/17',
-    avatar: '/api/placeholder/32/32',
-  },
-  {
-    id: 5,
-    name: 'Leslie Alexander',
-    email: 'willie.jennings@example.com',
-    phone: '(207) 555-0119',
-    position: 'Team Lead',
-    department: 'Human Resource',
-    dateOfJoining: '05/30/14',
-    avatar: '/api/placeholder/32/32',
-  },
-];
-
 const EmployeeTable = () => {
+  const [employees, setEmployees] = useState([]);
   const [filterPosition, setFilterPosition] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [editingEmployee, setEditingEmployee] = useState(null);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/employees')
+      .then(response => response.json())
+      .then(data => setEmployees(data.employees || [])) // Ensure employees is an array
+      .catch(error => console.error('Error fetching employees:', error));
+  }, []);
 
   const handleFilterPosition = (event) => {
     setFilterPosition(event.target.value);
@@ -108,24 +63,39 @@ const EmployeeTable = () => {
   };
 
   const handleDelete = (id) => {
-    const updatedEmployees = employees.filter(employee => employee.id !== id);
-    // Update the employees array with the filtered list
-    // This is just a mock update, in a real scenario you would use a state management solution
-    console.log('Deleted employee with id:', id);
+    fetch(`http://localhost:5000/api/employees/${id}`, {
+      method: 'DELETE',
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Deleted employee with id:', id);
+        setEmployees(employees.filter(employee => employee._id !== id));
+      })
+      .catch(error => console.error('Error deleting employee:', error));
     setAnchorEl(null);
   };
 
   const handleSave = () => {
-    // Save the edited employee data
-    // This is just a mock save, in a real scenario you would update the state or send a request to the server
-    console.log('Saved employee:', editingEmployee);
-    setOpen(false);
+    fetch(`http://localhost:5000/api/employees/${editingEmployee._id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(editingEmployee),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Saved employee:', data);
+        setEmployees(employees.map(employee => employee._id === data.employee._id ? data.employee : employee));
+        setOpen(false);
+      })
+      .catch(error => console.error('Error saving employee:', error));
   };
 
   const filteredEmployees = employees.filter((employee) => {
-    const positionMatch = filterPosition ? employee.position === filterPosition : true;
+    const positionMatch = filterPosition ? employee.role === filterPosition : true;
     const searchMatch =
-      employee.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      employee.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       employee.email.toLowerCase().includes(searchQuery.toLowerCase());
     return positionMatch && searchMatch;
   });
@@ -135,13 +105,14 @@ const EmployeeTable = () => {
 
   return (
     <Box sx={{ padding: '20px', backgroundColor: '#fff', borderRadius: '8px' }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3} >
         <Select
           value={filterPosition}
           onChange={handleFilterPosition}
           displayEmpty
           sx={{
             width: '200px',
+            borderRadius:"8px",
             '& .MuiSelect-select': {
               padding: '8px 14px',
             },
@@ -150,7 +121,7 @@ const EmployeeTable = () => {
           <MenuItem value="">
             <em>Position</em>
           </MenuItem>
-          {[...new Set(employees.map((employee) => employee.position))].map((position) => (
+          {[...new Set(employees.map((employee) => employee.role))].map((position) => (
             <MenuItem key={position} value={position}>
               {position}
             </MenuItem>
@@ -165,7 +136,7 @@ const EmployeeTable = () => {
         />
       </Box>
 
-      <TableContainer component={Paper} elevation={0}>
+      <TableContainer component={Paper} elevation={0}  >
         <Table sx={{ minWidth: 650 }}>
           <TableHead>
             <TableRow>
@@ -182,26 +153,26 @@ const EmployeeTable = () => {
           <TableBody>
             {filteredEmployees.map((employee) => (
               <TableRow
-                key={employee.id}
+                key={employee._id}
                 sx={{ '&:hover': { backgroundColor: '#F9FAFB' } }}
               >
                 <TableCell>
                   <Avatar
                     src={employee.avatar}
-                    alt={employee.name}
+                    alt={employee.fullName}
                     sx={{ width: 32, height: 32 }}
                   />
                 </TableCell>
                 <TableCell>
                   <Typography variant="body2" color="textPrimary">
-                    {employee.name}
+                    {employee.fullName}
                   </Typography>
                 </TableCell>
                 <TableCell>{employee.email}</TableCell>
                 <TableCell>{employee.phone}</TableCell>
-                <TableCell>{employee.position}</TableCell>
+                <TableCell>{employee.role}</TableCell>
                 <TableCell>{employee.department}</TableCell>
-                <TableCell>{employee.dateOfJoining}</TableCell>
+                <TableCell>{employee.createdAt}</TableCell>
                 <TableCell>
                   <IconButton size="small" onClick={(e) => handleToggle(e, employee)}>
                     <MoreVertIcon />
@@ -218,7 +189,7 @@ const EmployeeTable = () => {
                           <ClickAwayListener onClickAway={handleClose}>
                             <MenuList autoFocusItem={openMenu} id={id} onKeyDown={(e) => handleClose(e)}>
                               <MenuItem onClick={() => handleEdit(employee)}>Edit</MenuItem>
-                              <MenuItem onClick={() => handleDelete(employee.id)}>Delete</MenuItem>
+                              <MenuItem onClick={() => handleDelete(employee._id)}>Delete</MenuItem>
                             </MenuList>
                           </ClickAwayListener>
                         </Paper>
@@ -262,8 +233,8 @@ const EmployeeTable = () => {
               <Box>
                 <TextField
                   label="Full Name"
-                  value={editingEmployee.name}
-                  onChange={(e) => setEditingEmployee({ ...editingEmployee, name: e.target.value })}
+                  value={editingEmployee.fullName}
+                  onChange={(e) => setEditingEmployee({ ...editingEmployee, fullName: e.target.value })}
                   fullWidth
                   margin="normal"
                 />
@@ -284,8 +255,8 @@ const EmployeeTable = () => {
                 <TextField
                   label="Position"
                   select
-                  value={editingEmployee.position}
-                  onChange={(e) => setEditingEmployee({ ...editingEmployee, position: e.target.value })}
+                  value={editingEmployee.role}
+                  onChange={(e) => setEditingEmployee({ ...editingEmployee, role: e.target.value })}
                   fullWidth
                   margin="normal"
                 >
@@ -304,8 +275,8 @@ const EmployeeTable = () => {
                 />
                 <TextField
                   label="Date of Joining"
-                  value={editingEmployee.dateOfJoining}
-                  onChange={(e) => setEditingEmployee({ ...editingEmployee, dateOfJoining: e.target.value })}
+                  value={editingEmployee.createdAt}
+                  onChange={(e) => setEditingEmployee({ ...editingEmployee, createdAt: e.target.value })}
                   fullWidth
                   margin="normal"
                   InputLabelProps={{
