@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios"; // Import Axios
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
+import './LoginPage.css' // Import useNavigate
 
 export const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true); // Toggle state
@@ -21,7 +22,9 @@ export const LoginPage = () => {
 
     setLoading(true);
 
-    const apiUrl = isLogin ? "http://localhost:5000/api/auth/login" : "http://localhost:5000/api/auth/register"; // Set the URL based on login or signup
+    const apiUrl = isLogin
+      ? "http://localhost:5000/api/auth/login"
+      : "http://localhost:5000/api/auth/register"; // Set the URL based on login or signup
     const payload = isLogin
       ? { email, password }
       : { fullName, email, password, confirmPassword, role: "user" }; // Adjust payload for Signup
@@ -51,84 +54,106 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="register-container">
-      {/* Left Section */}
-      <div className="left-section">
-        <img src="dashboard-image.jpg" alt="Dashboard Preview" className="dashboard-img" />
-        <h2>Welcome to Dashboard</h2>
-        <p>Manage your HR operations efficiently with our dashboard.</p>
+    <>
+      <div className="logo-container">
+        <div className="logo-box"></div>
+        <span className="logo-text">LOGO</span>
       </div>
-
-      {/* Right Section */}
-      <div className="right-section">
-        <h2>{isLogin ? "Login to Dashboard" : "Sign Up for Dashboard"}</h2>
-
-        <form className="register-form" onSubmit={handleSubmit}>
-          {/* Show Full Name only for SignUp */}
-          {!isLogin && (
-            <>
-              <label>Full Name*</label>
-              <input
-                type="text"
-                placeholder="Full name"
-                required
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-              />
-            </>
-          )}
-
-          <label>Email Address*</label>
-          <input
-            type="email"
-            placeholder="Email Address"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+      <div className="register-container">
+        {/* Left Section */}
+        <div className="left-section">
+          <img
+            src="dashboard-image.jpg"
+            alt="Dashboard Preview"
+            className="dashboard-img"
           />
+          <h2>Welcome to Dashboard</h2>
+          <p>Manage your HR operations efficiently with our dashboard.</p>
+        </div>
 
-          <label>Password*</label>
-          <div className="password-input">
-            <input
-              type={passwordVisible ? "text" : "password"}
-              placeholder="Password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <span onClick={() => setPasswordVisible(!passwordVisible)}>👁️</span>
-          </div>
+        {/* Right Section */}
+        <div className="right-section">
+          <h2>{isLogin ? "Login to Dashboard" : "Sign Up for Dashboard"}</h2>
 
-          {/* Show Confirm Password only for SignUp */}
-          {!isLogin && (
-            <>
-              <label>Confirm Password*</label>
-              <div className="password-input">
+          <form className="register-form" onSubmit={handleSubmit}>
+            {/* Show Full Name only for SignUp */}
+            {!isLogin && (
+              <>
+                <label>Full Name*</label>
                 <input
-                  type={confirmPasswordVisible ? "text" : "password"}
-                  placeholder="Confirm Password"
+                  type="text"
+                  placeholder="Full name"
                   required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
                 />
-                <span onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}>👁️</span>
-              </div>
-            </>
-          )}
+              </>
+            )}
 
-          <button type="submit" className="register-btn" disabled={loading}>
-            {loading ? "Loading..." : isLogin ? "Login" : "Register"}
-          </button>
+            <label>Email Address*</label>
+            <input
+              type="email"
+              placeholder="Email Address"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-          {/* Toggle between Login and Signup */}
-          <p>
-            {isLogin ? "Don't have an account?" : "Already have an account?"}
-            <button type="button" className="toggle-btn" onClick={() => setIsLogin(!isLogin)}>
-              {isLogin ? "Register" : "Login"}
+            <label>Password*</label>
+            <div className="password-input">
+              <input
+                type={passwordVisible ? "text" : "password"}
+                placeholder="Password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <span onClick={() => setPasswordVisible(!passwordVisible)}>
+                👁️
+              </span>
+            </div>
+
+            {/* Show Confirm Password only for SignUp */}
+            {!isLogin && (
+              <>
+                <label>Confirm Password*</label>
+                <div className="password-input">
+                  <input
+                    type={confirmPasswordVisible ? "text" : "password"}
+                    placeholder="Confirm Password"
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                  <span
+                    onClick={() =>
+                      setConfirmPasswordVisible(!confirmPasswordVisible)
+                    }
+                  >
+                    👁️
+                  </span>
+                </div>
+              </>
+            )}
+
+            <button type="submit" className="register-btn" disabled={loading}>
+              {loading ? "Loading..." : isLogin ? "Login" : "Register"}
             </button>
-          </p>
-        </form>
+
+            {/* Toggle between Login and Signup */}
+            <p>
+              {isLogin ? "Don't have an account?" : "Already have an account?"}
+              <button
+                type="button"
+                className="toggle-btn"
+                onClick={() => setIsLogin(!isLogin)}
+              >
+                {isLogin ? "Register" : "Login"}
+              </button>
+            </p>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
